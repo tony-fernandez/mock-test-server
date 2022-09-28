@@ -1,0 +1,21 @@
+server:
+  port: 8081
+  error:
+    include-message: always
+
+logging:
+  level:
+    root: INFO
+    com:
+      pyur:
+        mock:
+          server: DEBUG
+
+#By default the path for cxf is: /services
+cxf:
+  #Overriding the default path
+  path: /server
+
+spring:
+  profiles:
+    active: local

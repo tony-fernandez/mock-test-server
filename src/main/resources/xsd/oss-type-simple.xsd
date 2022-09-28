@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2014 sp1 (x64) (http://www.altova.com) von Alexander Roock (T-Systems International GmbH) bearbeitet -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://spri.telekom.de/oss/v4/simple"
+			version="4.00.03/2014-12-19">
+	<xsd:import namespace="http://spri.telekom.de/oss/v4/enm" schemaLocation="oss-type-enum.xsd"/>
+	<!-- 
+		!
+		! Auftragskopf (Datentypen)
+		!
+	-->
+	<xsd:simpleType name="AuftraggebernummerType">
+		<xsd:annotation>
+			<xsd:documentation>Der eindeutige Identifikator des Auftraggebers, der durch den Leistungserbringer bei
+				Neuanlage des Kunden vergeben wird
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="10"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="LeistungsnummerType">
+		<xsd:annotation>
+			<xsd:documentation>Eindeutiger Identifier der Leistung aus einem Rahmenvertrag des Kunden der für den
+				Auftrag heranzuziehen ist
+				(bei Beauftragung im Namen des Kunden ist der Kunde gemeint, für den bestellt wird)
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="10"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="VertragsnummerType">
+		<xsd:annotation>
+			<xsd:documentation>Die Vertragsnummer bezeichnet den Einzelvertrag, auf den sich der Auftrag bezeieht.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="10"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ExterneAuftragsnummerType">
+		<xsd:annotation>
+			<xsd:documentation>Die externe Auftragsnummer ist der eindeutige Identifikator des Kunden für den Auftrag;
+				er wird durch den Kunden vergeben.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="20"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- 
+		!
+		!   Auftragsdaten
+		!
+	-->
+	<xsd:simpleType name="TerminType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:date">
+			<xsd:pattern value="\d{4}-.*"/>
+			<!-- Jahr nur vierstellig -->
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="VorabstimmungIdType">
+		<xsd:annotation>
+			<xsd:documentation>ID welche auf den erfolgten Vorabstimmungsprozess zwischen aufnehmenden und abgebenden
+				Endkundenprovider referenziert
+				(Verwendung derzeit ausschließlich im Kontext des Geschäftsfalls Providerwechsel).
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="16"/>
+			<xsd:maxLength value="21"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- 
+		!
+		!  Auftragsposition
+		!
+	-->
+	<xsd:simpleType name="ProduktbezeichnerType">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="100"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- 
+		!
+		! Meldungsposition
+		!
+	-->
+	<xsd:simpleType name="MeldungscodeType">
+		<xsd:annotation>
+			<xsd:documentation>Kurzbezeichnung zum Meldungstext</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="10"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="MeldungstextType">
+		<xsd:annotation>
+			<xsd:documentation>ausführliche Beschreibung für den Meldungscode</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="255"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- 
+		!
+		! Ansprechpartner
+		!
+	-->
+	<xsd:simpleType name="TelefonnummerType">
+		<xsd:annotation>
+			<xsd:documentation>Eine Telefonnummer wird mit maximal 30 Zeichen angegeben.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="30"/>
+			<xsd:whiteSpace value="collapse"/>
+			<xsd:pattern value="((\+\d{2} |0)\d{2,5} )?\d{1,14}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="EmailadresseType">
+		<xsd:annotation>
+			<xsd:documentation>Eine E-Mail-Adresse muss dem üblichen Muster einer solchen Adresse entsprechen.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="320"/>
+			<xsd:whiteSpace value="collapse"/>
+			<xsd:pattern value=".+@(.+\.)+\w+"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- 
+		!
+		! Anschrift / Adresse
+		!
+	-->
+	<xsd:simpleType name="VornameType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="30"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="NachnameType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="30"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="StrassennameType">
+		<xsd:annotation>
+			<xsd:documentation>maximal 40 Zeichen für die Angabe der Strasse zur Adresse</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="40"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="HausnummerType">
+		<xsd:annotation>
+			<xsd:documentation>Die Hausnummer wird als Zahl (0-9999) angegeben.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="\d{1,4}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="HausnummernZusatzType">
+		<xsd:annotation>
+			<xsd:documentation>eine mögliche Ergänzung zur Hausnummer</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="6"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="OrtsnameType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="40"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="OrtsteilType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="40"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="GebaeudeteilNameType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="25"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="GebaeudeteilZusatzType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="25"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="LandType">
+		<xsd:annotation>
+			<xsd:documentation>der zweistellige Ländercode (ISO)</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:length value="2"/>
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="PostleitzahlType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="6"/>
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- 
+		!
+		! Leitungsattribute
+		!
+	-->
+	<xsd:simpleType name="LineIdType">
+		<xsd:annotation>
+			<xsd:documentation>Line-ID die sich zusammensetzt aus Country-Code (3-stellig), Carrier-Code (1-6 stellig)
+				und Line-Code (1-10 stellig). Die einzelnen Informationen werden dabei jeweils durch einen Punkt
+				voneinander getrennt.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="collapse"/>
+			<xsd:minLength value="7"/>
+			<xsd:maxLength value="21"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SeriennummerONTType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="20"/>
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- 
+        !
+        ! Schaltungsattribute
+        !
+    -->
+	<xsd:simpleType name="UebergabepunktKundeType">
+		<xsd:annotation>
+			<xsd:documentation>Übergabepunkt beim Kunden.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="TAE"/>
+			<xsd:enumeration value="RJ45"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- 
+		!
+		! Meldung
+		!
+	-->
+	<xsd:simpleType name="VersionType">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="2"/>
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ZeitstempelType">
+		<xsd:restriction base="xsd:dateTime">
+			<xsd:pattern value="\d{4}-.*"/>
+			<!-- Jahr nur vierstellig -->
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- 
+		!
+		! Allgemein
+		!
+	-->
+	<xsd:simpleType name="String60ZeichenType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="60"/>
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2014 sp1 (x64) (http://www.altova.com) von Alexander Roock (T-Systems International GmbH) bearbeitet -->
+<!-- edited with XMLSpy v2010 rel. 3 (http://www.altova.com) by Alexander Roock (T-Systems Enterprise Services GmbH) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:fttx="http://spri.telekom.de/oss/v4/fttx"
+			xmlns:order="http://spri.telekom.de/oss/v4/order"
+			xmlns:complex="http://spri.telekom.de/oss/v4/complex" targetNamespace="http://spri.telekom.de/oss/v4/fttx"
+			version="4.00.03/2014-12-19">
+	<xsd:import namespace="http://spri.telekom.de/oss/v4/order" schemaLocation="oss-order.xsd"/>
+	<xsd:import namespace="http://spri.telekom.de/oss/v4/message" schemaLocation="oss-message.xsd"/>
+	<xsd:import namespace="http://spri.telekom.de/oss/v4/complex" schemaLocation="oss-type-complex.xsd"/>
+	<xsd:import namespace="http://spri.telekom.de/oss/v4/simple" schemaLocation="oss-type-simple.xsd"/>
+	<xsd:import namespace="http://spri.telekom.de/oss/v4/enm" schemaLocation="oss-type-enum.xsd"/>
+	<!-- 
+		!
+		!	Produkt im Auftrag
+		!
+	-->
+	<xsd:element name="produktAuftrag" type="fttx:ProduktFTTXType"/>
+	<xsd:complexType name="ProduktFTTXType">
+		<xsd:complexContent>
+			<xsd:extension base="complex:ProduktType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		!	Bereitstellung
+		!
+	-->
+	<xsd:element name="NEU" type="fttx:FTTXBereitstellungType"/>
+	<xsd:complexType name="FTTXBereitstellungType">
+		<xsd:complexContent>
+			<xsd:extension base="order:BereitstellungProduktType">
+				<xsd:sequence>
+					<xsd:element name="standortA" type="complex:StandortAType">
+						<xsd:annotation>
+							<xsd:documentation>Angaben zu Adresse Standort A</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="standortVersand" type="complex:StandortVersandType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Lieferadresse (falls abweichend von StandortA)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="vormieter" type="complex:FTTxVormieterType" minOccurs="0"/>
+					<xsd:element name="montageleistung" type="complex:MontageleistungType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Ergänzende Daten zur Durchführung der Montageleistung.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:group ref="complex:WitaExtendedInfosGroup"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		!	Kündigung
+		!
+	-->
+	<xsd:element name="KUE-AG" type="fttx:FTTXKuendigungType"/>
+	<xsd:complexType name="FTTXKuendigungType">
+		<xsd:complexContent>
+			<xsd:extension base="order:KuendigungProduktType">
+				<xsd:sequence>
+					<xsd:group ref="complex:WitaInfosGroup"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		!	Leistungsänderung (Momentan keine spezifische Ausprägung!)
+		!
+	-->
+	<!-- 
+		!
+		!	Leistungsmerkmal-Änderung (Momentan keine spezifische Ausprägung!)
+		!
+	-->
+	<!-- 
+		!
+		!	Entstörung (Momentan keine spezifische Ausprägung!)
+		!
+	-->
+	<!-- 
+		!
+		!	Providerwechsel
+		!
+	-->
+	<xsd:element name="PV" type="fttx:FTTXProviderwechselType"/>
+	<xsd:complexType name="FTTXProviderwechselType">
+		<xsd:complexContent>
+			<xsd:extension base="order:ProviderwechselProduktType">
+				<xsd:sequence>
+					<xsd:element name="standortA" type="complex:StandortAType">
+						<xsd:annotation>
+							<xsd:documentation>Angaben zu Adresse Standort A</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="montageleistung" type="complex:MontageleistungType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Ergänzende Daten zur Durchführung der Montageleistung.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! Meldungspositionsattribute (Momentan keine spezifische Ausprägung!)
+		!
+	-->
+</xsd:schema>

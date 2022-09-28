@@ -1,0 +1,1065 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2014 sp1 (x64) (http://www.altova.com) von Alexander Roock (T-Systems International GmbH) bearbeitet -->
+<!-- edited with XMLSpy v2010 rel. 3 (http://www.altova.com) by Alexander Roock (T-Systems Enterprise Services GmbH) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:complex="http://spri.telekom.de/oss/v4/complex"
+			xmlns:simple="http://spri.telekom.de/oss/v4/simple" xmlns:enum="http://spri.telekom.de/oss/v4/enm"
+			targetNamespace="http://spri.telekom.de/oss/v4/complex" version="4.00.03/2014-12-19">
+	<xsd:import namespace="http://spri.telekom.de/oss/v4/simple" schemaLocation="oss-type-simple.xsd"/>
+	<xsd:import namespace="http://spri.telekom.de/oss/v4/enm" schemaLocation="oss-type-enum.xsd"/>
+	<!-- 
+		!
+		!  Technische Quittung
+		!
+	-->
+	<xsd:element name="TEQ" type="complex:MessageTEQType"/>
+	<xsd:complexType name="MessageTEQType">
+		<xsd:sequence>
+			<xsd:element name="meldungsTyp" type="enum:MeldungstypType"/>
+			<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType" minOccurs="0"/>
+			<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType" minOccurs="0"/>
+			<xsd:element name="meldungspositionen">
+				<xsd:annotation>
+					<xsd:documentation>Meldungspositionen zum Meldungstyp - TEQ</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="position" type="complex:MeldungspositionOhneAttributeType"
+									 maxOccurs="unbounded"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		!  technischer Rahmen
+		!
+	-->
+	<xsd:element name="serviceControl" type="complex:ServiceControlType"/>
+	<xsd:complexType name="ServiceControlType">
+		<xsd:sequence>
+			<xsd:element name="zeitstempelVersand" type="xsd:time"/>
+			<xsd:element name="version" type="complex:VersionType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="VersionType">
+		<xsd:sequence>
+			<xsd:element name="majorVersion" type="simple:VersionType"/>
+			<xsd:element name="minorVersion" type="simple:VersionType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		!  Auftraggeber
+		!
+	-->
+	<xsd:complexType name="AuftraggeberType">
+		<xsd:sequence>
+			<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+			<xsd:element name="leistungsnummer" type="simple:LeistungsnummerType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		!   Auftragsdaten
+		!
+	-->
+	<xsd:element name="Anlage" type="complex:AnlageType"/>
+	<xsd:complexType name="AnlageType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="dateiname">
+				<xsd:annotation>
+					<xsd:documentation>der Dateiname zum File einschließlich der Erweiterung (Datei-Typ)
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="255"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="dateityp" type="enum:DokumenttypType">
+				<xsd:annotation>
+					<xsd:documentation>der Datentyp des Dokuments (Text, PDF, ...) im Mime-Type-Format
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="beschreibung" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Freitext zur Beschreibung des Inhaltes der Anlage</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="160"/>
+						<xsd:minLength value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="inhalt" type="xsd:base64Binary">
+				<xsd:annotation>
+					<xsd:documentation>der eigentliche Inhalt der Datei (binärer Dateninhalt) - max. 1 MB
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AnlageMitTypType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="complex:AnlageType">
+				<xsd:sequence>
+					<xsd:element name="anlagentyp" type="enum:AnlagentypType">
+						<xsd:annotation>
+							<xsd:documentation>Gibt die Art der Anlage an</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="WunschterminType">
+		<xsd:sequence>
+			<xsd:element name="datum" type="simple:TerminType">
+				<xsd:annotation>
+					<xsd:documentation>Terminwunsch (Datum) für eine Aktion.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="zeitfenster" type="enum:ZeitfensterType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Eingrenzung des KWT auf definierte Stundenintervalle.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="WunschterminMitZeitangabeType">
+		<xsd:sequence>
+			<xsd:element name="datum" type="simple:TerminType">
+				<xsd:annotation>
+					<xsd:documentation>Terminwunsch (Datum) für eine Aktion.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="zeit" type="xsd:time" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Terminwunsch (Zeit) für eine Aktion.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="WunschterminMitZeitangabeUndZeitfensterType">
+		<xsd:sequence>
+			<xsd:element name="datum" type="simple:TerminType">
+				<xsd:annotation>
+					<xsd:documentation>Terminwunsch (Datum) für eine Aktion.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="zeit" type="xsd:time" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Terminwunsch (Zeit) für eine Aktion.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="zeitfenster" type="enum:ZeitfensterType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Eingrenzung des KWT auf definierte Stundenintervalle.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="KennerType">
+		<xsd:sequence>
+			<xsd:element name="projektId" minOccurs="0">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="projektkenner">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="30"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name="kopplungskenner" minOccurs="0">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="30"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="auftragskenner" minOccurs="0">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="auftragsklammer">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:long">
+									<xsd:minInclusive value="0"/>
+									<xsd:maxInclusive value="9999999999"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name="anzahlAuftraege" type="xsd:int"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="FTTxAnschlussType">
+		<xsd:annotation>
+			<xsd:documentation>Beschreibt den Übergabepunkt und die kundenspezifischen Daten für einen beauftragten
+				FTTx-Anschluss.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="a10nsp">
+				<xsd:annotation>
+					<xsd:documentation>Der Übergabepunkt zwischen den Kooperationspartnern.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="20"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="port">
+				<xsd:annotation>
+					<xsd:documentation>Der Port zur näheren Spezifikation der A10NSP-SST.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="10"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="s-vlan" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Die S-VLAN-Id des Kundenanschlusses.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="4"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="c-vlan" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Die C-VLAN-Id des Kundenanschlusses.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="4"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="lineId" type="simple:LineIdType">
+				<xsd:annotation>
+					<xsd:documentation>Die eindeutige Line-Id, die den Kundenanschluss kennzeichnet (bestehend aus
+						Country-, Carrier- und Line-Code).
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="uebergabepunktKunde" type="simple:UebergabepunktKundeType">
+				<xsd:annotation>
+					<xsd:documentation>Übergabepunkt beim Kunden.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="witaVertragsnummer" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="10"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="FTTxAnschlussEinfachType">
+		<xsd:annotation>
+			<xsd:documentation>Einfache Beschreibung eines FTTx-Anschlusses.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="lineId" type="simple:LineIdType">
+				<xsd:annotation>
+					<xsd:documentation>Die eindeutige Line-Id, die den Kundenanschluss kennzeichnet (bestehend aus
+						Country-, Carrier- und Line-Code).
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="FTTxVormieterType">
+		<xsd:sequence>
+			<xsd:element name="person" minOccurs="0">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="vorname" type="simple:VornameType" minOccurs="0"/>
+						<xsd:element name="nachname" type="simple:NachnameType"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="homeId" type="complex:HomeIdType" minOccurs="0"/>
+			<xsd:element name="seriennummerONT" type="simple:SeriennummerONTType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="FTTxVersandinfosONTType">
+		<xsd:sequence>
+			<xsd:element name="seriennummerONT" type="simple:SeriennummerONTType">
+				<xsd:annotation>
+					<xsd:documentation>SN des ONT welchen der LE an den AG oder Endkunden im Rahmen des Auftrages
+						verschickt.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="versand">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="unternehmen">
+							<xsd:annotation>
+								<xsd:documentation>Unternehmen mit dem der ONT Unternehmen, mit welchem der ONT versandt
+									wurde.
+								</xsd:documentation>
+							</xsd:annotation>
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="10"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name="sendungsnummer">
+							<xsd:annotation>
+								<xsd:documentation>Sendungsverfolgungnummer des Versandunternehmens.</xsd:documentation>
+							</xsd:annotation>
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="40"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ProviderwechselAnkuendigungType">
+		<xsd:sequence>
+			<xsd:element name="providername" type="simple:String60ZeichenType"/>
+			<xsd:element name="uebernahmedatumGeplant" type="xsd:date"/>
+			<xsd:element name="antwortfrist" type="xsd:date"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ProviderwechselBestaetigungType">
+		<xsd:sequence>
+			<xsd:element name="providername" type="simple:String60ZeichenType"/>
+			<xsd:element name="uebernahmedatumVerbindlich" type="xsd:date"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ProviderwechselRueckmeldungType">
+		<xsd:sequence>
+			<xsd:element name="providername" type="simple:String60ZeichenType" minOccurs="0"/>
+			<xsd:element name="zustimmungProviderwechsel" type="enum:JaNeinType"/>
+			<xsd:element name="antwortcode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="10"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="antworttext" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="0"/>
+						<xsd:maxLength value="255"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		! Meldungsposition
+		!
+	-->
+	<xsd:complexType name="MeldungspositionOhneAttributeType">
+		<xsd:annotation>
+			<xsd:documentation>Meldungsposition mit Positionsattributen.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="meldungscode" type="simple:MeldungscodeType">
+				<xsd:annotation>
+					<xsd:documentation>Kurzbezeichnung zum Meldungstext</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="meldungstext" type="simple:MeldungstextType">
+				<xsd:annotation>
+					<xsd:documentation>ausführliche Beschreibung für den Meldungscode</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		! Geschäftsfall
+		!
+	-->
+	<xsd:complexType name="GeschaeftsfallType" abstract="true"/>
+	<xsd:complexType name="GeschaeftsfallProduktType" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>die abstrakte Basis für alle geschäftsfall-spezifische Produkt-Daten</xsd:documentation>
+		</xsd:annotation>
+	</xsd:complexType>
+	<!-- 
+		!
+		! Produkt
+		!
+	-->
+	<xsd:complexType name="ProduktType" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>die abstrakte Basis für alle Produkt-Strukturen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="bezeichner" type="simple:ProduktbezeichnerType">
+				<xsd:annotation>
+					<xsd:documentation>Produktname des Produktes, das in der Auftragsposition zugebucht, in Wegfall
+						gebracht oder geändert werden soll
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		! Ansprechpartner
+		!
+	-->
+	<xsd:complexType name="AnsprechpartnerType">
+		<xsd:annotation>
+			<xsd:documentation>Erweitert eine Person um die Informationen: Telefonnummer, Mobilfunknr., Faxnummer und
+				EMail
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="complex:PersonType">
+				<xsd:sequence>
+					<xsd:element name="telefonnummer" type="simple:TelefonnummerType">
+						<xsd:annotation>
+							<xsd:documentation>Telefonnummer des Ansprechpartners</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="mobilfunknummer" type="simple:TelefonnummerType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Mobilfunknummer des Ansprechpartners</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="faxnummer" type="simple:TelefonnummerType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Faxnummer des Ansprechpartners</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="emailadresse" type="simple:EmailadresseType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Pflicht bei Rolle 'Auftragsmanagement'; E-mail-Adresse des
+								Ansprechpartners
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="AnsprechpartnerESTType">
+		<xsd:annotation>
+			<xsd:documentation>Beschreibt den Kundenkontakt im GF Entstörung.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="anrede" type="enum:AnredePersonType">
+				<xsd:annotation>
+					<xsd:documentation>Anrede der Person</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="vorname" type="simple:VornameType">
+				<xsd:annotation>
+					<xsd:documentation>Vorname der Person</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="nachname" type="simple:NachnameType">
+				<xsd:annotation>
+					<xsd:documentation>Nachname der Person</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="telefonnummer" type="simple:TelefonnummerType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Telefonnummer des Ansprechpartners</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="mobilfunknummer" type="simple:TelefonnummerType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Mobilfunknummer des Ansprechpartners</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="faxnummer" type="simple:TelefonnummerType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Faxnummer des Ansprechpartners</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="emailadresse" type="simple:EmailadresseType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>E-mail-Adresse des Ansprechpartners
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="kontaktaufnahmeErwuenscht" type="xsd:boolean">
+				<xsd:annotation>
+					<xsd:documentation>Gibt an, ob eine Kontaktaufnahme durch den Leistungserbringer erfolgen darf.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AnsprechpartnerMitRolleType">
+		<xsd:annotation>
+			<xsd:documentation>Erweitert einen Ansprechpartner um die Informatione zur Rolle (Funktion) der Person
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="complex:AnsprechpartnerType">
+				<xsd:sequence>
+					<xsd:element name="rolle" type="enum:AnsprechpartnerRolleType">
+						<xsd:annotation>
+							<xsd:documentation>Rolle des Ansprechpartners.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! Standort
+		!
+	-->
+	<xsd:complexType name="StandortType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:choice>
+				<xsd:annotation>
+					<xsd:documentation/>
+				</xsd:annotation>
+				<xsd:element name="person" type="complex:PersonMitTelefonType">
+					<xsd:annotation>
+						<xsd:documentation>die Person bei Adressen natürlicher Personen</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="firma" type="complex:FirmaMitTelefonType">
+					<xsd:annotation>
+						<xsd:documentation>die Firma bei Firmenadressen</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:choice>
+			<xsd:element name="strasse" type="complex:StrasseType">
+				<xsd:annotation>
+					<xsd:documentation>Straße des Standortes</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="gebaeudeteil" type="complex:GebaeudeteilType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Gebäudeteil am Standort</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="land" type="simple:LandType" default="de" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Land des Standortes</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="postleitzahl" type="simple:PostleitzahlType">
+				<xsd:annotation>
+					<xsd:documentation>PLZ des Standortes</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ort" type="complex:OrtType">
+				<xsd:annotation>
+					<xsd:documentation>Ort des Standortes</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="StandortAType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="complex:StandortType">
+				<xsd:sequence>
+					<xsd:element name="lageTAE_ONT" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Kommentar zur Beschreibung der Lage der TAE-Dose bzw. des ONTs am
+								Standort A
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="60"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="StandortVersandType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:choice>
+				<xsd:annotation>
+					<xsd:documentation/>
+				</xsd:annotation>
+				<xsd:element name="person" type="complex:PersonType">
+					<xsd:annotation>
+						<xsd:documentation>die Person bei Adressen natürlicher Personen</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="firma" type="complex:FirmaType">
+					<xsd:annotation>
+						<xsd:documentation>die Firma bei Firmenadressen</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:choice>
+			<xsd:element name="strasse" type="complex:StrasseType">
+				<xsd:annotation>
+					<xsd:documentation>Straße des Standortes</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="land" type="simple:LandType" default="de" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Land des Standortes</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="postleitzahl" type="simple:PostleitzahlType">
+				<xsd:annotation>
+					<xsd:documentation>PLZ des Standortes</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ort" type="complex:OrtType">
+				<xsd:annotation>
+					<xsd:documentation>Ort des Standortes</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="HomeIdType">
+		<xsd:sequence>
+			<xsd:element name="homeIdNummer">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="15"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		! Montageleistung
+		!
+	-->
+	<xsd:complexType name="MontageleistungType">
+		<xsd:annotation>
+			<xsd:documentation>ergänzende Daten zur Durchführung der Montageleistung</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="ansprechpartner" type="complex:AnsprechpartnerType">
+				<xsd:annotation>
+					<xsd:documentation>der Ansprechpartner, mit dem die Montageleistung abzustimmen ist
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="montagehinweis" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Nähere Angaben zur Durchführung der Montageleistung</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="100"/>
+						<xsd:minLength value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		! Anschrift / Adresse
+		!
+	-->
+	<xsd:complexType name="PersonType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="anrede" type="enum:AnredePersonType">
+				<xsd:annotation>
+					<xsd:documentation>Anrede der Person</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="vorname" type="simple:VornameType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Vorname der Person</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="nachname" type="simple:NachnameType">
+				<xsd:annotation>
+					<xsd:documentation>Nachname der Person</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PersonMitTelefonType">
+		<xsd:annotation>
+			<xsd:documentation>Person, die über optionale Kontaktmöglichkeiten (Telefon und Mobil) verfügt.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="complex:PersonType">
+				<xsd:sequence>
+					<xsd:element name="telefonnummer" type="simple:TelefonnummerType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Telefonnummer der Person.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="mobilfunknummer" type="simple:TelefonnummerType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Mobilfunknummer der Person.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="FirmaType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="anrede" type="enum:AnredeFirmaType">
+				<xsd:annotation>
+					<xsd:documentation>Anrede zur Firma</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="firmenname" type="simple:VornameType">
+				<xsd:annotation>
+					<xsd:documentation>Name der Firma</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="firmennameZweiterTeil" type="simple:NachnameType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation/>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="FirmaMitTelefonType">
+		<xsd:annotation>
+			<xsd:documentation>Firma, die über optionale Kontaktmöglichkeiten (Telefon und Mobil) verfügt.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="complex:FirmaType">
+				<xsd:sequence>
+					<xsd:element name="telefonnummer" type="simple:TelefonnummerType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Telefonnummer der Firma.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="mobilfunknummer" type="simple:TelefonnummerType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Mobilfunknummer der Firma.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="StrasseType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="strassenname" type="simple:StrassennameType">
+				<xsd:annotation>
+					<xsd:documentation/>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="hausnummer" type="simple:HausnummerType">
+				<xsd:annotation>
+					<xsd:documentation/>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="hausnummernZusatz" type="simple:HausnummernZusatzType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation/>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="OrtType">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="ortsname" type="simple:OrtsnameType">
+				<xsd:annotation>
+					<xsd:documentation/>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ortsteil" type="simple:OrtsteilType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation/>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="GebaeudeteilType">
+		<xsd:sequence>
+			<xsd:element name="gebaeudeteilName" type="simple:GebaeudeteilNameType"/>
+			<xsd:element name="gebaeudeteilZusatz" type="simple:GebaeudeteilZusatzType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		! WITA-Informationen
+		! (Simple Modellierung, da nur temporär aufgenommen.)
+		!
+	-->
+	<xsd:group name="WitaInfosGroup">
+		<xsd:sequence>
+			<xsd:element name="witaVertragsnummer" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Zur Identifizierung eines Vertrages im Bestand der DTAG im Rahmen eines
+						Anbieterwechsels über die WBCI.
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="10"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="technologie" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Bezeichnung der Technologie im Rahmen eines Anbieterwechsels über die WBCI.
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="25"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="WitaExtendedInfosGroup">
+		<xsd:sequence>
+			<xsd:group ref="complex:WitaInfosGroup"/>
+			<xsd:element name="bestandssuche" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Identifikation zur Ermittlung des Bestandes der DTAG im Rahmen eines
+						Anbieterwechsels über die WBCI.
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="onkz">
+							<xsd:annotation>
+								<xsd:documentation>Ortsnetzkennzahl des Anschlusses.</xsd:documentation>
+							</xsd:annotation>
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:pattern value="\d{2,5}"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name="rufnummer">
+							<xsd:annotation>
+								<xsd:documentation>Rufnummer des Anschlusses, bei Anlagenanschlüssen bzw. digitalen
+									Sammelanschlüssen die Rechnungsnummer des den Auftrag betreffendes
+									Anschlussbestandes.
+								</xsd:documentation>
+							</xsd:annotation>
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:pattern value="\d{1,14}"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="rufnummernPortierung" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Angaben zur Rufnummern-Portierung im Rahmen eines Anbieterwechsels über die
+						WBCI.
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:choice>
+							<xsd:element name="anlagenanschluss">
+								<xsd:annotation>
+									<xsd:documentation>Angaben zu Rufnummernportierung eines
+										Durchwahlanlage-Anschlusses.
+									</xsd:documentation>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="onkzDurchwahlAbfragestelle">
+											<xsd:annotation>
+												<xsd:documentation>Kombination von der ONKZ, Durchwahlnummer und
+													Abfragestelle (für die Anlagenanschlüsse).
+												</xsd:documentation>
+											</xsd:annotation>
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="onkz">
+														<xsd:simpleType>
+															<xsd:restriction base="xsd:string">
+																<xsd:pattern value="\d{2,5}"/>
+															</xsd:restriction>
+														</xsd:simpleType>
+													</xsd:element>
+													<xsd:element name="durchwahlnummer">
+														<xsd:simpleType>
+															<xsd:restriction base="xsd:string">
+																<xsd:pattern value="\d{1,8}"/>
+															</xsd:restriction>
+														</xsd:simpleType>
+													</xsd:element>
+													<xsd:element name="abfragestelle">
+														<xsd:simpleType>
+															<xsd:restriction base="xsd:string">
+																<xsd:pattern value="\d{1,6}"/>
+															</xsd:restriction>
+														</xsd:simpleType>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+										<xsd:element name="zuPortierenderRufnummernblock" maxOccurs="5">
+											<xsd:annotation>
+												<xsd:documentation>Auflistung der zu portierenden Rufnummernblöcke.
+												</xsd:documentation>
+											</xsd:annotation>
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="rnrBlockVon">
+														<xsd:simpleType>
+															<xsd:restriction base="xsd:string">
+																<xsd:pattern value="\d{1,6}"/>
+															</xsd:restriction>
+														</xsd:simpleType>
+													</xsd:element>
+													<xsd:element name="rnrBlockBis">
+														<xsd:simpleType>
+															<xsd:restriction base="xsd:string">
+																<xsd:pattern value="\d{1,6}"/>
+															</xsd:restriction>
+														</xsd:simpleType>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="einzelanschluss">
+								<xsd:annotation>
+									<xsd:documentation>Angaben zum Einzelanschluss, von dem die Rufnummern portiert
+										werden sollen.
+									</xsd:documentation>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:choice>
+										<xsd:element name="rufnummernliste">
+											<xsd:annotation>
+												<xsd:documentation>Bestimmte Rufnummern des Anschlusses müssen portiert
+													werden.
+												</xsd:documentation>
+											</xsd:annotation>
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="zuPortierendeOnkzRnr" maxOccurs="10">
+														<xsd:complexType>
+															<xsd:sequence>
+																<xsd:element name="onkz">
+																	<xsd:simpleType>
+																		<xsd:restriction base="xsd:string">
+																			<xsd:pattern value="\d{2,5}"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="rufnummer">
+																	<xsd:simpleType>
+																		<xsd:restriction base="xsd:string">
+																			<xsd:pattern value="\d{1,14}"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+															</xsd:sequence>
+														</xsd:complexType>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+										<xsd:element name="alleRufnummern">
+											<xsd:annotation>
+												<xsd:documentation>Alle Rufnummern des Anschlusses müssen portiert
+													werden.
+												</xsd:documentation>
+											</xsd:annotation>
+											<xsd:simpleType>
+												<xsd:restriction base="xsd:string">
+													<xsd:enumeration value="J"/>
+												</xsd:restriction>
+											</xsd:simpleType>
+										</xsd:element>
+									</xsd:choice>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:choice>
+						<xsd:element name="portierungskenner" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>Code für den Carrier oder ISP-Kennung der DT, zu dem die Rufnummern
+									abgegeben werden.
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="abgebenderEKP" type="xsd:boolean" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Gibt an, ob EKPab Telekom (Retail) ist.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+</xsd:schema>

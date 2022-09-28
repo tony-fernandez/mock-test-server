@@ -1,0 +1,2218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Spri_4_0_InhouseService" targetNamespace="api.bus.xconnect.de"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="api.bus.xconnect.de"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://spri.telekom.de/oss/v4/simple"
+                   version="1.0">
+
+            <xs:simpleType name="UebergabepunktKundeType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="TAE"/>
+                    <xs:enumeration value="RJ45"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+        </xs:schema>
+        <xs:schema xmlns:ns1="http://spri.telekom.de/oss/v4/complex" xmlns:ns2="http://spri.telekom.de/oss/v4/enm"
+                   xmlns:tns="http://spri.telekom.de/oss/v4/order" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   targetNamespace="http://spri.telekom.de/oss/v4/order" version="1.0">
+
+            <xs:import namespace="http://spri.telekom.de/oss/v4/complex"/>
+            <xs:import namespace="http://spri.telekom.de/oss/v4/enm"/>
+            <xs:element name="AEN-LMAE" type="tns:LeistungsmerkmalAenderungType"/>
+            <xs:element name="EST" type="tns:EntstoerungType"/>
+            <xs:element name="GET" type="tns:DiagnoseGetType"/>
+            <xs:element name="KUE-AG" type="tns:KuendigungType"/>
+            <xs:element name="LAE" type="tns:LeistungsaenderungType"/>
+            <xs:element name="NEU" type="tns:BereitstellungType"/>
+            <xs:element name="PV" type="tns:ProviderwechselType"/>
+            <xs:element name="SET" type="tns:DiagnoseSetType"/>
+            <xs:element name="auftrag" type="tns:AuftragType"/>
+            <xs:element name="auftragType" type="tns:AuftragType"/>
+            <xs:element name="auftragsposition" type="tns:AuftragspositionType"/>
+            <xs:complexType name="AuftragType">
+                <xs:sequence>
+                    <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                    <xs:element name="auftraggeber" type="ns1:AuftraggeberType"/>
+                    <xs:element minOccurs="0" name="besteller" type="ns1:AuftraggeberType"/>
+                    <xs:element name="geschaeftsfall" type="ns1:GeschaeftsfallType"/>
+                    <xs:element name="geschaeftsfallArt" type="ns2:GeschaeftsfallArtType"/>
+                    <xs:element name="aenderungskennzeichen" type="ns2:AenderungskennzeichenType"/>
+                    <xs:element minOccurs="0" name="terminNeu" type="xs:date"/>
+                    <xs:element minOccurs="0" name="kenner" type="ns1:KennerType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="BereitstellungType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:GeschaeftsfallType">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="vorabstimmungId" type="xs:string"/>
+                            <xs:element minOccurs="0" name="anlage" type="ns1:AnlageMitTypType"/>
+                            <xs:element name="ansprechpartner" type="tns:AnsprechpartnerType"/>
+                            <xs:element name="termine" type="tns:BereitstellungTermineType"/>
+                            <xs:element name="auftragsposition" type="tns:AuftragspositionBereitstellungType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="AnsprechpartnerType">
+                <xs:sequence>
+                    <xs:element name="auftragsmanagement" type="ns1:AnsprechpartnerType"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="ansprechpartner" nillable="true"
+                                type="ns1:AnsprechpartnerMitRolleType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="BereitstellungTermineType">
+                <xs:sequence>
+                    <xs:element name="auftraggeberWunschtermin" type="ns1:WunschterminType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="AuftragspositionBereitstellungType">
+                <xs:sequence>
+                    <xs:element name="produkt" type="ns1:ProduktType"/>
+                    <xs:element name="geschaeftsfallProdukt" type="tns:BereitstellungProduktType"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="position" nillable="true"
+                                type="tns:AuftragspositionType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType abstract="true" name="BereitstellungProduktType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:GeschaeftsfallProduktType">
+                        <xs:sequence/>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType abstract="true" name="LeistungsaenderungProduktType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:GeschaeftsfallProduktType">
+                        <xs:sequence/>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType abstract="true" name="LeistungsmerkmalAenderungProduktType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:GeschaeftsfallProduktType">
+                        <xs:sequence/>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType abstract="true" name="EntstoerungProduktType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:GeschaeftsfallProduktType">
+                        <xs:sequence/>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType abstract="true" name="KuendigungProduktType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:GeschaeftsfallProduktType">
+                        <xs:sequence/>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType abstract="true" name="ProviderwechselProduktType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:GeschaeftsfallProduktType">
+                        <xs:sequence/>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="AuftragspositionType">
+                <xs:sequence>
+                    <xs:element name="produkt" type="ns1:ProduktType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="AenderungPositionType">
+                <xs:complexContent>
+                    <xs:extension base="tns:AuftragspositionType">
+                        <xs:sequence>
+                            <xs:element name="aktionscode" type="ns2:AktionscodeType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="KuendigungType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:GeschaeftsfallType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="lineId" type="xs:string"/>
+                            <xs:element minOccurs="0" name="vorabstimmungId" type="xs:string"/>
+                            <xs:element minOccurs="0" name="anlage" type="ns1:AnlageMitTypType"/>
+                            <xs:element name="ansprechpartner" type="tns:AnsprechpartnerType"/>
+                            <xs:element name="termine" type="tns:KuendigungTermineType"/>
+                            <xs:element minOccurs="0" name="auftragsposition"
+                                        type="tns:AuftragspositionKuendigungType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="KuendigungTermineType">
+                <xs:sequence>
+                    <xs:element name="auftraggeberWunschtermin" type="ns1:WunschterminType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="AuftragspositionKuendigungType">
+                <xs:sequence>
+                    <xs:element name="geschaeftsfallProdukt" type="tns:KuendigungProduktType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="LeistungsaenderungType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:GeschaeftsfallType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="lineId" type="xs:string"/>
+                            <xs:element minOccurs="0" name="anlage" type="ns1:AnlageMitTypType"/>
+                            <xs:element name="ansprechpartner" type="tns:AnsprechpartnerType"/>
+                            <xs:element name="termine" type="tns:LeistungsaenderungTermineType"/>
+                            <xs:element name="auftragsposition" type="tns:AuftragspositionLeistungsaenderungType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="LeistungsaenderungTermineType">
+                <xs:sequence>
+                    <xs:element name="auftraggeberWunschtermin" type="ns1:WunschterminType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="AuftragspositionLeistungsaenderungType">
+                <xs:sequence>
+                    <xs:element name="produkt" type="ns1:ProduktType"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="position" nillable="true"
+                                type="tns:AenderungPositionType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="LeistungsmerkmalAenderungType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:GeschaeftsfallType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="lineId" type="xs:string"/>
+                            <xs:element minOccurs="0" name="anlage" type="ns1:AnlageMitTypType"/>
+                            <xs:element name="ansprechpartner" type="tns:AnsprechpartnerType"/>
+                            <xs:element name="termine" type="tns:LeistungsmerkmalAenderungTermineType"/>
+                            <xs:element name="auftragsposition"
+                                        type="tns:AuftragspositionLeistungsmerkmalAenderungType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="LeistungsmerkmalAenderungTermineType">
+                <xs:sequence>
+                    <xs:element name="auftraggeberWunschtermin" type="ns1:WunschterminType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="AuftragspositionLeistungsmerkmalAenderungType">
+                <xs:sequence>
+                    <xs:element name="produkt" type="ns1:ProduktType"/>
+                    <xs:element maxOccurs="unbounded" name="position" type="tns:AenderungPositionType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="EntstoerungType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:GeschaeftsfallType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="lineId" type="xs:string"/>
+                            <xs:element minOccurs="0" name="anlage" type="ns1:AnlageMitTypType"/>
+                            <xs:element name="ansprechpartner" type="tns:AnsprechpartnerType"/>
+                            <xs:element name="kontaktEndkunde" type="ns1:AnsprechpartnerESTType"/>
+                            <xs:element name="termine" type="tns:EntstoerungTermineType"/>
+                            <xs:element name="stoerungsNrAuftraggeber" type="xs:string"/>
+                            <xs:element minOccurs="0" name="reklamation" type="tns:EntstoerungsReklamationType"/>
+                            <xs:element name="vorpruefungErfolgt" type="xs:boolean"/>
+                            <xs:element name="stoerungsbeschreibung" type="xs:string"/>
+                            <xs:element minOccurs="0" name="expressentstoerung" type="xs:boolean"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="EntstoerungTermineType">
+                <xs:sequence>
+                    <xs:element name="auftraggeberWunschtermin" type="ns1:WunschterminType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="EntstoerungsReklamationType">
+                <xs:sequence>
+                    <xs:element name="stoerungsNrLeistungserbringer" type="xs:string"/>
+                    <xs:element name="reklamationsgrund" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="ProviderwechselType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:GeschaeftsfallType">
+                        <xs:sequence>
+                            <xs:element name="lineId" type="xs:string"/>
+                            <xs:element name="vorabstimmungId" type="xs:string"/>
+                            <xs:element minOccurs="0" name="anlage" type="ns1:AnlageMitTypType"/>
+                            <xs:element name="ansprechpartner" type="tns:AnsprechpartnerType"/>
+                            <xs:element name="termine" type="tns:ProviderwechselTermineType"/>
+                            <xs:element name="auftragsposition" type="tns:AuftragspositionProviderwechselType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="ProviderwechselTermineType">
+                <xs:sequence>
+                    <xs:element name="auftraggeberWunschtermin" type="ns1:WunschterminType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="AuftragspositionProviderwechselType">
+                <xs:sequence>
+                    <xs:element name="produkt" type="ns1:ProduktType"/>
+                    <xs:element name="geschaeftsfallProdukt" type="tns:ProviderwechselProduktType"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="position" nillable="true"
+                                type="tns:AuftragspositionType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="DiagnoseGetType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:GeschaeftsfallType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="lineId" type="xs:string"/>
+                            <xs:element name="auftragsposition" type="tns:AuftragspositionDiagnoseType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="AuftragspositionDiagnoseType">
+                <xs:sequence>
+                    <xs:element name="parameter">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" name="operation" type="xs:string"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="DiagnoseSetType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:GeschaeftsfallType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="lineId" type="xs:string"/>
+                            <xs:element name="auftragsposition" type="tns:AuftragspositionDiagnoseType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+        </xs:schema>
+        <xs:schema xmlns:ns1="http://spri.telekom.de/oss/v4/complex" xmlns:ns2="http://spri.telekom.de/oss/v4/enm"
+                   xmlns:ns3="http://spri.telekom.de/oss/v4/simple" xmlns:tns="http://spri.telekom.de/oss/v4/message"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://spri.telekom.de/oss/v4/message"
+                   version="1.0">
+
+            <xs:import namespace="http://spri.telekom.de/oss/v4/complex"/>
+
+            <xs:import namespace="http://spri.telekom.de/oss/v4/enm"/>
+
+            <xs:import namespace="http://spri.telekom.de/oss/v4/simple"/>
+
+            <xs:element name="ABBM" type="tns:MeldungstypABBMType"/>
+
+            <xs:element name="ABBM-PV" type="tns:MeldungstypABBM-PVType"/>
+
+            <xs:element name="ABM" type="tns:MeldungstypABMType"/>
+
+            <xs:element name="ABM-PV" type="tns:MeldungstypABM-PVType"/>
+
+            <xs:element name="ABMpos" type="tns:MeldungspositionsattributeABMType"/>
+
+            <xs:element name="AKM-PV" type="tns:MeldungstypAKM-PVType"/>
+
+            <xs:element name="ENTM" type="tns:MeldungstypENTMType"/>
+
+            <xs:element name="ENTM-PV" type="tns:MeldungstypENTM-PVType"/>
+
+            <xs:element name="ERLM" type="tns:MeldungstypERLMType"/>
+
+            <xs:element name="ERLM-K" type="tns:MeldungstypERLM-KType"/>
+
+            <xs:element name="ERLM-PV" type="tns:MeldungstypERLM-PVType"/>
+
+            <xs:element name="KDLE" type="tns:MeldungstypKDLEType"/>
+
+            <xs:element name="MTAM" type="tns:MeldungstypMTAMType"/>
+
+            <xs:element name="QEB" type="tns:MeldungstypQEBType"/>
+
+            <xs:element name="QEBpos" type="tns:MeldungspositionsattributeQEBType"/>
+
+            <xs:element name="RUEM-PV" type="tns:MeldungstypRUEM-PVType"/>
+
+            <xs:element name="TAM" type="tns:MeldungstypTAMType"/>
+
+            <xs:element name="TBK-AG" type="tns:MeldungstypTBK-AGType"/>
+
+            <xs:element name="TBK-LE" type="tns:MeldungstypTBK-LEType"/>
+
+            <xs:element name="VZM" type="tns:MeldungstypVZMType"/>
+
+            <xs:element name="ZWM-AG" type="tns:MeldungstypZWM-AGType"/>
+
+            <xs:element name="ZWM-LE" type="tns:MeldungstypZWM-LEType"/>
+
+            <xs:element name="meldung" type="tns:MeldungType"/>
+
+            <xs:element name="meldungType" type="tns:MeldungType"/>
+
+            <xs:element name="meldungsposition" type="tns:MeldungspositionType"/>
+
+            <xs:complexType name="MeldungspositionType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:MeldungspositionOhneAttributeType">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="positionsattribute"
+                                        type="tns:MeldungspositionsattributeType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType abstract="true" name="MeldungspositionsattributeType">
+                <xs:sequence/>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungspositionsattributeABMType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungspositionsattributeType">
+                        <xs:sequence>
+                            <xs:element name="ansprechpartnerLeistungserbringer" type="ns1:AnsprechpartnerType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungspositionsattributeQEBType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungspositionsattributeType">
+                        <xs:sequence>
+                            <xs:element name="ansprechpartnerLeistungserbringer" type="ns1:AnsprechpartnerType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungspositionOhneAttributeMitWitaErweiterungType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:MeldungspositionOhneAttributeType">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="witaMeldungscode" type="xs:string"/>
+                            <xs:element minOccurs="0" name="witaMeldungstext" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungspositionMitWitaErweiterungType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungspositionOhneAttributeMitWitaErweiterungType">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="positionsattribute"
+                                        type="tns:MeldungspositionsattributeType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungType">
+                <xs:sequence>
+                    <xs:element name="auftragstyp" type="tns:AuftragstypType"/>
+                    <xs:element name="meldungstyp" type="tns:MeldungstypAbstractType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="AuftragstypType">
+                <xs:sequence>
+                    <xs:element name="geschaeftsfall" type="ns2:GeschaeftsfallMeldungType"/>
+                    <xs:element name="aenderungsKennzeichen" type="ns2:AenderungskennzeichenType"/>
+                    <xs:element name="geschaeftsfallart" type="ns2:GeschaeftsfallArtType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType abstract="true" name="MeldungstypAbstractType">
+                <xs:sequence/>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypABMType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeABMType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="tns:MeldungspositionMitWitaErweiterungType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeABMType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="auftraggebernummerBesteller" type="xs:string"/>
+                            <xs:element minOccurs="0" name="vorabstimmungId" type="xs:string"/>
+                            <xs:element name="verbindlicherLiefertermin" type="ns1:WunschterminType"/>
+                            <xs:element minOccurs="0" name="abgebenderProvider"
+                                        type="ns1:ProviderwechselRueckmeldungType"/>
+                            <xs:element name="anschluss" type="ns1:FTTxAnschlussType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType abstract="true" name="MeldungsattributeType">
+                <xs:sequence/>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeABBMType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="auftraggebernummerBesteller" type="xs:string"/>
+                            <xs:element minOccurs="0" name="vorabstimmungId" type="xs:string"/>
+                            <xs:element minOccurs="0" name="wiedervorlagetermin" type="xs:date"/>
+                            <xs:element minOccurs="0" name="abgebenderProvider"
+                                        type="ns1:ProviderwechselRueckmeldungType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeERLMType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="auftraggebernummerBesteller" type="xs:string"/>
+                            <xs:element minOccurs="0" name="vorabstimmungId" type="xs:string"/>
+                            <xs:element name="erledigungstermin" type="xs:date"/>
+                            <xs:element minOccurs="0" name="entstoerErgebnis" type="tns:EntstoerungErgebnisType"/>
+                            <xs:element minOccurs="0" name="anlage" type="ns1:AnlageMitTypType"/>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="dignoseergebnis" nillable="true"
+                                        type="tns:DiagnoseErgebnisType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="EntstoerungErgebnisType">
+                <xs:sequence>
+                    <xs:element name="ergebnis">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="FehlerBeseitigt"/>
+                                <xs:enumeration value="KeinenFehlerGefunden"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="entstoerZeitpunkt" type="xs:date"/>
+                    <xs:element minOccurs="0" name="anmerkung" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="DiagnoseErgebnisType">
+                <xs:sequence>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="wert" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeENTMType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="auftraggebernummerBesteller" type="xs:string"/>
+                            <xs:element minOccurs="0" name="vorabstimmungId" type="xs:string"/>
+                            <xs:element name="entgelttermin" type="xs:date"/>
+                            <xs:element minOccurs="0" name="anlage" type="ns1:AnlageMitTypType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeQEBType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="auftraggebernummerBesteller" type="xs:string"/>
+                            <xs:element minOccurs="0" name="vorabstimmungId" type="xs:string"/>
+                            <xs:element minOccurs="0" name="stoerungsNrLeistungserbringer" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeTAMType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="auftraggebernummerBesteller" type="xs:string"/>
+                            <xs:element minOccurs="0" name="vorabstimmungId" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeMTAMType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="auftraggebernummerBesteller" type="xs:string"/>
+                            <xs:element minOccurs="0" name="vorabstimmungId" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeVZMType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="auftraggebernummerBesteller" type="xs:string"/>
+                            <xs:element minOccurs="0" name="vorabstimmungId" type="xs:string"/>
+                            <xs:element minOccurs="0" name="verzoegerungstermin" type="xs:date"/>
+                            <xs:element minOccurs="0" name="verzoegerungsgrund" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeKDLEType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element name="abschaltungstermin" type="xs:date"/>
+                            <xs:element minOccurs="0" name="abschaltungsgrund" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeZWM-AGType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="auftraggebernummerBesteller" type="xs:string"/>
+                            <xs:element name="nachricht" type="xs:string"/>
+                            <xs:element minOccurs="0" name="ansprechpartner" type="ns1:AnsprechpartnerMitRolleType"/>
+                            <xs:element minOccurs="0" name="anlage" type="ns1:AnlageMitTypType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeZWM-LEType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="auftraggebernummerBesteller" type="xs:string"/>
+                            <xs:element minOccurs="0" name="vorabstimmungId" type="xs:string"/>
+                            <xs:element name="nachricht" type="xs:string"/>
+                            <xs:element minOccurs="0" name="ansprechpartner" type="ns1:AnsprechpartnerMitRolleType"/>
+                            <xs:element minOccurs="0" name="anlage" type="ns1:AnlageMitTypType"/>
+                            <xs:element minOccurs="0" name="versandONT" type="ns1:FTTxVersandinfosONTType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeTBKType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="auftraggebernummerBesteller" type="xs:string"/>
+                            <xs:element name="termin" type="ns1:WunschterminMitZeitangabeUndZeitfensterType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeAKM-PVType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="vorabstimmungId" type="xs:string"/>
+                            <xs:element name="anschluss" type="ns1:FTTxAnschlussEinfachType"/>
+                            <xs:element minOccurs="0" name="anlage" type="ns1:AnlageMitTypType"/>
+                            <xs:element name="aufnehmenderProvider" type="ns1:ProviderwechselAnkuendigungType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeRUEM-PVType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="vorabstimmungId" type="xs:string"/>
+                            <xs:element name="anschluss" type="ns1:FTTxAnschlussEinfachType"/>
+                            <xs:element name="abgebenderProvider" type="ns1:ProviderwechselRueckmeldungType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeABM-PVType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element name="anschluss" type="ns1:FTTxAnschlussEinfachType"/>
+                            <xs:element name="aufnehmenderProvider" type="ns1:ProviderwechselBestaetigungType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeERLM-PVType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element name="erledigungstermin" type="xs:date"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeENTM-PVType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element name="entgelttermin" type="xs:date"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeABBM-PVType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungsattributeERLM-KType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungsattributeType">
+                        <xs:sequence>
+                            <xs:element name="vertragsnummer" type="xs:string"/>
+                            <xs:element name="externeAuftragsnummer" type="xs:string"/>
+                            <xs:element name="auftraggebernummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="auftraggebernummerBesteller" type="xs:string"/>
+                            <xs:element minOccurs="0" name="vorabstimmungId" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypABBMType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeABBMType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="tns:MeldungspositionOhneAttributeMitWitaErweiterungType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypERLMType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeERLMType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="tns:MeldungspositionOhneAttributeMitWitaErweiterungType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypENTMType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeENTMType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="ns1:MeldungspositionOhneAttributeType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypQEBType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeQEBType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="tns:MeldungspositionType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypTAMType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeTAMType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="tns:MeldungspositionOhneAttributeMitWitaErweiterungType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypMTAMType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeMTAMType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="tns:MeldungspositionOhneAttributeMitWitaErweiterungType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypVZMType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeVZMType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="tns:MeldungspositionOhneAttributeMitWitaErweiterungType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypKDLEType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeKDLEType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="ns1:MeldungspositionOhneAttributeType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypZWM-LEType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeZWM-LEType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="ns1:MeldungspositionOhneAttributeType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypZWM-AGType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeZWM-AGType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="ns1:MeldungspositionOhneAttributeType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypAKM-PVType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeAKM-PVType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="ns1:MeldungspositionOhneAttributeType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypRUEM-PVType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeRUEM-PVType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="ns1:MeldungspositionOhneAttributeType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypABM-PVType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeABM-PVType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="ns1:MeldungspositionOhneAttributeType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypERLM-PVType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeERLM-PVType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="ns1:MeldungspositionOhneAttributeType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypENTM-PVType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeENTM-PVType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="ns1:MeldungspositionOhneAttributeType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypABBM-PVType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeABBM-PVType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="ns1:MeldungspositionOhneAttributeType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypERLM-KType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeERLM-KType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="ns1:MeldungspositionOhneAttributeType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType abstract="true" name="MeldungstypTBKType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypAbstractType">
+                        <xs:sequence>
+                            <xs:element name="meldungsattribute" type="tns:MeldungsattributeTBKType"/>
+                            <xs:element name="meldungspositionen">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="position"
+                                                    type="ns1:MeldungspositionOhneAttributeType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypTBK-LEType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypTBKType">
+                        <xs:sequence/>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungstypTBK-AGType">
+                <xs:complexContent>
+                    <xs:extension base="tns:MeldungstypTBKType">
+                        <xs:sequence/>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+        </xs:schema>
+        <xs:schema xmlns:ns1="http://spri.telekom.de/oss/v4/complex" xmlns:ns2="http://spri.telekom.de/oss/v4/order"
+                   xmlns:tns="http://spri.telekom.de/oss/v4/fttx" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   targetNamespace="http://spri.telekom.de/oss/v4/fttx" version="1.0">
+
+            <xs:import namespace="http://spri.telekom.de/oss/v4/complex"/>
+
+            <xs:import namespace="http://spri.telekom.de/oss/v4/order"/>
+
+            <xs:element name="KUE-AG" type="tns:FTTXKuendigungType"/>
+
+            <xs:element name="NEU" type="tns:FTTXBereitstellungType"/>
+
+            <xs:element name="PV" type="tns:FTTXProviderwechselType"/>
+
+            <xs:element name="produktAuftrag" type="tns:ProduktFTTXType"/>
+
+            <xs:complexType name="ProduktFTTXType">
+                <xs:complexContent>
+                    <xs:extension base="ns1:ProduktType">
+                        <xs:sequence/>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="FTTXKuendigungType">
+                <xs:complexContent>
+                    <xs:extension base="ns2:KuendigungProduktType">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="witaVertragsnummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="technologie" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="FTTXProviderwechselType">
+                <xs:complexContent>
+                    <xs:extension base="ns2:ProviderwechselProduktType">
+                        <xs:sequence>
+                            <xs:element name="standortA" type="ns1:StandortAType"/>
+                            <xs:element minOccurs="0" name="montageleistung" type="ns1:MontageleistungType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="FTTXBereitstellungType">
+                <xs:complexContent>
+                    <xs:extension base="ns2:BereitstellungProduktType">
+                        <xs:sequence>
+                            <xs:element name="standortA" type="ns1:StandortAType"/>
+                            <xs:element minOccurs="0" name="standortVersand" type="ns1:StandortVersandType"/>
+                            <xs:element minOccurs="0" name="vormieter" type="ns1:FTTxVormieterType"/>
+                            <xs:element minOccurs="0" name="montageleistung" type="ns1:MontageleistungType"/>
+                            <xs:element minOccurs="0" name="witaVertragsnummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="technologie" type="xs:string"/>
+                            <xs:element minOccurs="0" name="bestandssuche">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="onkz" type="xs:string"/>
+                                        <xs:element name="rufnummer" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="rufnummernPortierung">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:choice minOccurs="0">
+                                            <xs:element name="anlagenanschluss">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="onkzDurchwahlAbfragestelle">
+                                                            <xs:complexType>
+                                                                <xs:sequence>
+                                                                    <xs:element name="onkz" type="xs:string"/>
+                                                                    <xs:element name="durchwahlnummer"
+                                                                                type="xs:string"/>
+                                                                    <xs:element name="abfragestelle" type="xs:string"/>
+                                                                </xs:sequence>
+                                                            </xs:complexType>
+                                                        </xs:element>
+                                                        <xs:element maxOccurs="unbounded"
+                                                                    name="zuPortierenderRufnummernblock">
+                                                            <xs:complexType>
+                                                                <xs:sequence>
+                                                                    <xs:element name="rnrBlockVon" type="xs:string"/>
+                                                                    <xs:element name="rnrBlockBis" type="xs:string"/>
+                                                                </xs:sequence>
+                                                            </xs:complexType>
+                                                        </xs:element>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="einzelanschluss">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:choice minOccurs="0">
+                                                            <xs:element name="rufnummernliste">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:element maxOccurs="unbounded"
+                                                                                    name="zuPortierendeOnkzRnr">
+                                                                            <xs:complexType>
+                                                                                <xs:sequence>
+                                                                                    <xs:element name="onkz"
+                                                                                                type="xs:string"/>
+                                                                                    <xs:element name="rufnummer"
+                                                                                                type="xs:string"/>
+                                                                                </xs:sequence>
+                                                                            </xs:complexType>
+                                                                        </xs:element>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="alleRufnummern">
+                                                                <xs:simpleType>
+                                                                    <xs:restriction base="xs:string">
+                                                                        <xs:enumeration value="J"/>
+                                                                    </xs:restriction>
+                                                                </xs:simpleType>
+                                                            </xs:element>
+                                                        </xs:choice>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                        </xs:choice>
+                                        <xs:element name="portierungskenner" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="abgebenderEKP" type="xs:boolean"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+        </xs:schema>
+        <xs:schema xmlns:ns1="http://spri.telekom.de/oss/v4/enm" xmlns:ns2="http://spri.telekom.de/oss/v4/complex"
+                   xmlns:ns3="http://spri.telekom.de/oss/v4/message" xmlns:ns4="http://spri.telekom.de/oss/v4/order"
+                   xmlns:tns="http://spri.telekom.de/oss/v4/envelope" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   targetNamespace="http://spri.telekom.de/oss/v4/envelope" version="1.0">
+
+            <xs:import namespace="http://spri.telekom.de/oss/v4/enm"/>
+
+            <xs:import namespace="http://spri.telekom.de/oss/v4/complex"/>
+
+            <xs:import namespace="http://spri.telekom.de/oss/v4/message"/>
+
+            <xs:import namespace="http://spri.telekom.de/oss/v4/order"/>
+
+            <xs:element name="annehmenAuftragRequest" type="tns:AnnehmenAuftragRequestType"/>
+
+            <xs:element name="annehmenAuftragRequestType" type="tns:AnnehmenAuftragRequestType"/>
+
+            <xs:element name="annehmenAuftragResponse" type="tns:AnnehmenAuftragResponseType"/>
+
+            <xs:element name="annehmenAuftragResponseType" type="tns:AnnehmenAuftragResponseType"/>
+
+            <xs:element name="annehmenMeldungRequest" type="tns:AnnehmenMeldungRequestType"/>
+
+            <xs:element name="annehmenMeldungRequestType" type="tns:AnnehmenMeldungRequestType"/>
+
+            <xs:element name="annehmenMeldungResponse" type="tns:AnnehmenMeldungResponseType"/>
+
+            <xs:element name="annehmenMeldungResponseType" type="tns:AnnehmenMeldungResponseType"/>
+
+            <xs:complexType name="AnnehmenMeldungResponseType">
+                <xs:sequence>
+                    <xs:element name="control" type="tns:WholesaleResponseType"/>
+                    <xs:element name="quittung" type="ns2:MessageTEQType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="WholesaleResponseType">
+                <xs:complexContent>
+                    <xs:extension base="tns:WholesaleMessageType">
+                        <xs:sequence/>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType abstract="true" name="WholesaleMessageType">
+                <xs:sequence>
+                    <xs:element name="zeitstempel" type="xs:dateTime"/>
+                    <xs:element name="majorRelease" type="xs:string"/>
+                    <xs:element name="minorRelease" type="xs:string"/>
+                    <xs:element name="signaturId" type="tns:SignaturIdType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="SignaturIdType">
+                <xs:sequence>
+                    <xs:element name="issuer" type="xs:string"/>
+                    <xs:element name="serial" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="WholesaleRequestType">
+                <xs:complexContent>
+                    <xs:extension base="tns:WholesaleMessageType">
+                        <xs:sequence/>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="AnnehmenMeldungRequestType">
+                <xs:sequence>
+                    <xs:element name="control" type="tns:WholesaleRequestType"/>
+                    <xs:element name="meldung" type="ns3:MeldungType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="AnnehmenAuftragRequestType">
+                <xs:sequence>
+                    <xs:element name="control" type="tns:WholesaleRequestType"/>
+                    <xs:element name="auftrag" type="ns4:AuftragType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="AnnehmenAuftragResponseType">
+                <xs:sequence>
+                    <xs:element name="control" type="tns:WholesaleResponseType"/>
+                    <xs:element name="quittung" type="ns2:MessageTEQType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://spri.telekom.de/oss/v4/enm"
+                   version="1.0">
+
+            <xs:simpleType name="MeldungstypType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="TEQ"/>
+                    <xs:enumeration value="QEB"/>
+                    <xs:enumeration value="ABM"/>
+                    <xs:enumeration value="ERLM"/>
+                    <xs:enumeration value="ENTM"/>
+                    <xs:enumeration value="ABBM"/>
+                    <xs:enumeration value="VZM"/>
+                    <xs:enumeration value="TAM"/>
+                    <xs:enumeration value="MTAM"/>
+                    <xs:enumeration value="KDLE"/>
+                    <xs:enumeration value="ZWM-LE"/>
+                    <xs:enumeration value="ZWM-AG"/>
+                    <xs:enumeration value="TBK-LE"/>
+                    <xs:enumeration value="TBK-AG"/>
+                    <xs:enumeration value="AKM-PV"/>
+                    <xs:enumeration value="RUEM-PV"/>
+                    <xs:enumeration value="ABM-PV"/>
+                    <xs:enumeration value="ERLM-PV"/>
+                    <xs:enumeration value="ENTM-PV"/>
+                    <xs:enumeration value="ABBM-PV"/>
+                    <xs:enumeration value="ERLM-K"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="AnredePersonType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="1"/>
+                    <xs:enumeration value="2"/>
+                    <xs:enumeration value="9"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="AnsprechpartnerRolleType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Auftragsmanagement"/>
+                    <xs:enumeration value="Technik"/>
+                    <xs:enumeration value="Endkunde"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="GeschaeftsfallMeldungType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="NEU"/>
+                    <xs:enumeration value="KUE-AG"/>
+                    <xs:enumeration value="AEN-LMAE"/>
+                    <xs:enumeration value="LAE"/>
+                    <xs:enumeration value="EST"/>
+                    <xs:enumeration value="PV"/>
+                    <xs:enumeration value="KUE-LE"/>
+                    <xs:enumeration value="GET"/>
+                    <xs:enumeration value="SET"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="AenderungskennzeichenType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Standard"/>
+                    <xs:enumeration value="Storno"/>
+                    <xs:enumeration value="Terminverschiebung"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="GeschaeftsfallArtType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Bereitstellung"/>
+                    <xs:enumeration value="Kuendigung"/>
+                    <xs:enumeration value="Aenderung"/>
+                    <xs:enumeration value="Entstoerung"/>
+                    <xs:enumeration value="Endkundenanbieterwechsel"/>
+                    <xs:enumeration value="Diagnose"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="ZeitfensterType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="1"/>
+                    <xs:enumeration value="2"/>
+                    <xs:enumeration value="3"/>
+                    <xs:enumeration value="4"/>
+                    <xs:enumeration value="5"/>
+                    <xs:enumeration value="6"/>
+                    <xs:enumeration value="7"/>
+                    <xs:enumeration value="8"/>
+                    <xs:enumeration value="9"/>
+                    <xs:enumeration value="10"/>
+                    <xs:enumeration value="11"/>
+                    <xs:enumeration value="12"/>
+                    <xs:enumeration value="13"/>
+                    <xs:enumeration value="14"/>
+                    <xs:enumeration value="15"/>
+                    <xs:enumeration value="16"/>
+                    <xs:enumeration value="17"/>
+                    <xs:enumeration value="18"/>
+                    <xs:enumeration value="19"/>
+                    <xs:enumeration value="20"/>
+                    <xs:enumeration value="21"/>
+                    <xs:enumeration value="22"/>
+                    <xs:enumeration value="23"/>
+                    <xs:enumeration value="24"/>
+                    <xs:enumeration value="25"/>
+                    <xs:enumeration value="26"/>
+                    <xs:enumeration value="27"/>
+                    <xs:enumeration value="28"/>
+                    <xs:enumeration value="29"/>
+                    <xs:enumeration value="30"/>
+                    <xs:enumeration value="31"/>
+                    <xs:enumeration value="32"/>
+                    <xs:enumeration value="33"/>
+                    <xs:enumeration value="34"/>
+                    <xs:enumeration value="35"/>
+                    <xs:enumeration value="36"/>
+                    <xs:enumeration value="37"/>
+                    <xs:enumeration value="38"/>
+                    <xs:enumeration value="39"/>
+                    <xs:enumeration value="40"/>
+                    <xs:enumeration value="41"/>
+                    <xs:enumeration value="42"/>
+                    <xs:enumeration value="43"/>
+                    <xs:enumeration value="44"/>
+                    <xs:enumeration value="45"/>
+                    <xs:enumeration value="46"/>
+                    <xs:enumeration value="47"/>
+                    <xs:enumeration value="48"/>
+                    <xs:enumeration value="49"/>
+                    <xs:enumeration value="50"/>
+                    <xs:enumeration value="51"/>
+                    <xs:enumeration value="52"/>
+                    <xs:enumeration value="53"/>
+                    <xs:enumeration value="54"/>
+                    <xs:enumeration value="55"/>
+                    <xs:enumeration value="56"/>
+                    <xs:enumeration value="57"/>
+                    <xs:enumeration value="58"/>
+                    <xs:enumeration value="59"/>
+                    <xs:enumeration value="60"/>
+                    <xs:enumeration value="61"/>
+                    <xs:enumeration value="62"/>
+                    <xs:enumeration value="63"/>
+                    <xs:enumeration value="64"/>
+                    <xs:enumeration value="65"/>
+                    <xs:enumeration value="66"/>
+                    <xs:enumeration value="67"/>
+                    <xs:enumeration value="68"/>
+                    <xs:enumeration value="69"/>
+                    <xs:enumeration value="70"/>
+                    <xs:enumeration value="71"/>
+                    <xs:enumeration value="72"/>
+                    <xs:enumeration value="73"/>
+                    <xs:enumeration value="74"/>
+                    <xs:enumeration value="75"/>
+                    <xs:enumeration value="76"/>
+                    <xs:enumeration value="77"/>
+                    <xs:enumeration value="78"/>
+                    <xs:enumeration value="79"/>
+                    <xs:enumeration value="80"/>
+                    <xs:enumeration value="81"/>
+                    <xs:enumeration value="82"/>
+                    <xs:enumeration value="83"/>
+                    <xs:enumeration value="84"/>
+                    <xs:enumeration value="85"/>
+                    <xs:enumeration value="86"/>
+                    <xs:enumeration value="87"/>
+                    <xs:enumeration value="88"/>
+                    <xs:enumeration value="89"/>
+                    <xs:enumeration value="90"/>
+                    <xs:enumeration value="91"/>
+                    <xs:enumeration value="92"/>
+                    <xs:enumeration value="93"/>
+                    <xs:enumeration value="94"/>
+                    <xs:enumeration value="95"/>
+                    <xs:enumeration value="96"/>
+                    <xs:enumeration value="97"/>
+                    <xs:enumeration value="98"/>
+                    <xs:enumeration value="99"/>
+                    <xs:enumeration value="A"/>
+                    <xs:enumeration value="B"/>
+                    <xs:enumeration value="C"/>
+                    <xs:enumeration value="D"/>
+                    <xs:enumeration value="E"/>
+                    <xs:enumeration value="F"/>
+                    <xs:enumeration value="G"/>
+                    <xs:enumeration value="H"/>
+                    <xs:enumeration value="I"/>
+                    <xs:enumeration value="J"/>
+                    <xs:enumeration value="K"/>
+                    <xs:enumeration value="L"/>
+                    <xs:enumeration value="M"/>
+                    <xs:enumeration value="N"/>
+                    <xs:enumeration value="O"/>
+                    <xs:enumeration value="P"/>
+                    <xs:enumeration value="Q"/>
+                    <xs:enumeration value="R"/>
+                    <xs:enumeration value="S"/>
+                    <xs:enumeration value="T"/>
+                    <xs:enumeration value="U"/>
+                    <xs:enumeration value="V"/>
+                    <xs:enumeration value="W"/>
+                    <xs:enumeration value="X"/>
+                    <xs:enumeration value="Y"/>
+                    <xs:enumeration value="Z"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="JaNeinType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="J"/>
+                    <xs:enumeration value="N"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="AnlagentypType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Kuendigungsschreiben"/>
+                    <xs:enumeration value="Lageplan"/>
+                    <xs:enumeration value="Kundenauftrag"/>
+                    <xs:enumeration value="Portierungsanzeige"/>
+                    <xs:enumeration value="Rechnung"/>
+                    <xs:enumeration value="Sonstige"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="DokumenttypType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="image/tiff"/>
+                    <xs:enumeration value="image/jpeg"/>
+                    <xs:enumeration value="application/msword"/>
+                    <xs:enumeration value="application/excel"/>
+                    <xs:enumeration value="application/pdf"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="AnredeFirmaType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="4"/>
+                    <xs:enumeration value="9"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="AktionscodeType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="A"/>
+                    <xs:enumeration value="W"/>
+                    <xs:enumeration value="Z"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+        </xs:schema>
+        <xs:schema xmlns:ns1="http://spri.telekom.de/oss/v4/enm" xmlns:ns2="http://spri.telekom.de/oss/v4/simple"
+                   xmlns:ns3="api.bus.xconnect.de" xmlns:tns="http://spri.telekom.de/oss/v4/complex"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://spri.telekom.de/oss/v4/complex"
+                   version="1.0">
+
+            <xs:import namespace="http://spri.telekom.de/oss/v4/enm"/>
+
+            <xs:import namespace="http://spri.telekom.de/oss/v4/simple"/>
+
+            <xs:import namespace="api.bus.xconnect.de"/>
+
+            <xs:element name="Anlage" type="tns:AnlageType"/>
+
+            <xs:element name="TEQ" type="tns:MessageTEQType"/>
+
+            <xs:element name="serviceControl" type="tns:ServiceControlType"/>
+
+            <xs:complexType name="MessageTEQType">
+                <xs:sequence>
+                    <xs:element name="meldungsTyp" type="ns1:MeldungstypType"/>
+                    <xs:element minOccurs="0" name="externeAuftragsnummer" type="xs:string"/>
+                    <xs:element minOccurs="0" name="auftraggebernummer" type="xs:string"/>
+                    <xs:element name="meldungspositionen">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" name="position"
+                                            type="tns:MeldungspositionOhneAttributeType"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="MeldungspositionOhneAttributeType">
+                <xs:sequence>
+                    <xs:element name="meldungscode" type="xs:string"/>
+                    <xs:element name="meldungstext" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="AnsprechpartnerType">
+                <xs:complexContent>
+                    <xs:extension base="tns:PersonType">
+                        <xs:sequence>
+                            <xs:element name="telefonnummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="mobilfunknummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="faxnummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="emailadresse" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="PersonType">
+                <xs:sequence>
+                    <xs:element name="anrede" type="ns1:AnredePersonType"/>
+                    <xs:element minOccurs="0" name="vorname" type="xs:string"/>
+                    <xs:element name="nachname" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="PersonMitTelefonType">
+                <xs:complexContent>
+                    <xs:extension base="tns:PersonType">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="telefonnummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="mobilfunknummer" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="AnsprechpartnerMitRolleType">
+                <xs:complexContent>
+                    <xs:extension base="tns:AnsprechpartnerType">
+                        <xs:sequence>
+                            <xs:element name="rolle" type="ns1:AnsprechpartnerRolleType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="WunschterminType">
+                <xs:sequence>
+                    <xs:element name="datum" type="xs:date"/>
+                    <xs:element minOccurs="0" name="zeitfenster" type="ns1:ZeitfensterType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="ProviderwechselRueckmeldungType">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="providername" type="xs:string"/>
+                    <xs:element name="zustimmungProviderwechsel" type="ns1:JaNeinType"/>
+                    <xs:element minOccurs="0" name="antwortcode" type="xs:string"/>
+                    <xs:element minOccurs="0" name="antworttext" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="FTTxAnschlussType">
+                <xs:sequence>
+                    <xs:element name="a10nsp" type="xs:string"/>
+                    <xs:element name="port" type="xs:string"/>
+                    <xs:element minOccurs="0" name="s-vlan" type="xs:string"/>
+                    <xs:element minOccurs="0" name="c-vlan" type="xs:string"/>
+                    <xs:element name="lineId" type="xs:string"/>
+                    <xs:element name="uebergabepunktKunde" type="ns2:UebergabepunktKundeType"/>
+                    <xs:element minOccurs="0" name="witaVertragsnummer" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="AnlageMitTypType">
+                <xs:complexContent>
+                    <xs:extension base="tns:AnlageType">
+                        <xs:sequence>
+                            <xs:element name="anlagentyp" type="ns1:AnlagentypType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="AnlageType">
+                <xs:complexContent>
+                    <xs:extension base="ns3:CustomAnlageTyp">
+                        <xs:sequence>
+                            <xs:element name="dateiname" type="xs:string"/>
+                            <xs:element name="dateityp" type="ns1:DokumenttypType"/>
+                            <xs:element minOccurs="0" name="beschreibung" type="xs:string"/>
+                            <xs:element name="inhalt" type="xs:base64Binary"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="FTTxVersandinfosONTType">
+                <xs:sequence>
+                    <xs:element name="seriennummerONT" type="xs:string"/>
+                    <xs:element name="versand">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="unternehmen" type="xs:string"/>
+                                <xs:element name="sendungsnummer" type="xs:string"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="WunschterminMitZeitangabeUndZeitfensterType">
+                <xs:sequence>
+                    <xs:element name="datum" type="xs:date"/>
+                    <xs:element minOccurs="0" name="zeit" type="xs:time"/>
+                    <xs:element minOccurs="0" name="zeitfenster" type="ns1:ZeitfensterType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="FTTxAnschlussEinfachType">
+                <xs:sequence>
+                    <xs:element name="lineId" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="ProviderwechselAnkuendigungType">
+                <xs:sequence>
+                    <xs:element name="providername" type="xs:string"/>
+                    <xs:element name="uebernahmedatumGeplant" type="xs:date"/>
+                    <xs:element name="antwortfrist" type="xs:date"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="ProviderwechselBestaetigungType">
+                <xs:sequence>
+                    <xs:element name="providername" type="xs:string"/>
+                    <xs:element name="uebernahmedatumVerbindlich" type="xs:date"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="AuftraggeberType">
+                <xs:sequence>
+                    <xs:element name="auftraggebernummer" type="xs:string"/>
+                    <xs:element name="leistungsnummer" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType abstract="true" name="GeschaeftsfallType">
+                <xs:sequence/>
+            </xs:complexType>
+
+            <xs:complexType abstract="true" name="ProduktType">
+                <xs:sequence>
+                    <xs:element name="bezeichner" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType abstract="true" name="GeschaeftsfallProduktType">
+                <xs:sequence/>
+            </xs:complexType>
+
+            <xs:complexType name="StandortAType">
+                <xs:complexContent>
+                    <xs:extension base="tns:StandortType">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="lageTAE_ONT" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="StandortType">
+                <xs:sequence>
+                    <xs:choice minOccurs="0">
+                        <xs:element name="person" type="tns:PersonMitTelefonType"/>
+                        <xs:element name="firma" type="tns:FirmaMitTelefonType"/>
+                    </xs:choice>
+                    <xs:element name="strasse" type="tns:StrasseType"/>
+                    <xs:element minOccurs="0" name="gebaeudeteil" type="tns:GebaeudeteilType"/>
+                    <xs:element default="de" minOccurs="0" name="land" type="xs:string"/>
+                    <xs:element name="postleitzahl" type="xs:string"/>
+                    <xs:element name="ort" type="tns:OrtType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="FirmaMitTelefonType">
+                <xs:complexContent>
+                    <xs:extension base="tns:FirmaType">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="telefonnummer" type="xs:string"/>
+                            <xs:element minOccurs="0" name="mobilfunknummer" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="FirmaType">
+                <xs:sequence>
+                    <xs:element name="anrede" type="ns1:AnredeFirmaType"/>
+                    <xs:element name="firmenname" type="xs:string"/>
+                    <xs:element minOccurs="0" name="firmennameZweiterTeil" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="StrasseType">
+                <xs:sequence>
+                    <xs:element name="strassenname" type="xs:string"/>
+                    <xs:element name="hausnummer" type="xs:string"/>
+                    <xs:element minOccurs="0" name="hausnummernZusatz" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="GebaeudeteilType">
+                <xs:sequence>
+                    <xs:element name="gebaeudeteilName" type="xs:string"/>
+                    <xs:element minOccurs="0" name="gebaeudeteilZusatz" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="OrtType">
+                <xs:sequence>
+                    <xs:element name="ortsname" type="xs:string"/>
+                    <xs:element minOccurs="0" name="ortsteil" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="MontageleistungType">
+                <xs:sequence>
+                    <xs:element name="ansprechpartner" type="tns:AnsprechpartnerType"/>
+                    <xs:element minOccurs="0" name="montagehinweis" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="StandortVersandType">
+                <xs:sequence>
+                    <xs:choice minOccurs="0">
+                        <xs:element name="person" type="tns:PersonType"/>
+                        <xs:element name="firma" type="tns:FirmaType"/>
+                    </xs:choice>
+                    <xs:element name="strasse" type="tns:StrasseType"/>
+                    <xs:element default="de" minOccurs="0" name="land" type="xs:string"/>
+                    <xs:element name="postleitzahl" type="xs:string"/>
+                    <xs:element name="ort" type="tns:OrtType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="FTTxVormieterType">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="person">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element minOccurs="0" name="vorname" type="xs:string"/>
+                                <xs:element name="nachname" type="xs:string"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="homeId" type="tns:HomeIdType"/>
+                    <xs:element minOccurs="0" name="seriennummerONT" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="HomeIdType">
+                <xs:sequence>
+                    <xs:element name="homeIdNummer" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="AnsprechpartnerESTType">
+                <xs:sequence>
+                    <xs:element name="anrede" type="ns1:AnredePersonType"/>
+                    <xs:element name="vorname" type="xs:string"/>
+                    <xs:element name="nachname" type="xs:string"/>
+                    <xs:element minOccurs="0" name="telefonnummer" type="xs:string"/>
+                    <xs:element minOccurs="0" name="mobilfunknummer" type="xs:string"/>
+                    <xs:element minOccurs="0" name="faxnummer" type="xs:string"/>
+                    <xs:element minOccurs="0" name="emailadresse" type="xs:string"/>
+                    <xs:element name="kontaktaufnahmeErwuenscht" type="xs:boolean"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="KennerType">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="projektId">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="projektkenner" type="xs:string"/>
+                                <xs:element minOccurs="0" name="kopplungskenner" type="xs:string"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="auftragskenner">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="auftragsklammer" type="xs:long"/>
+                                <xs:element name="anzahlAuftraege" type="xs:int"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="ServiceControlType">
+                <xs:sequence>
+                    <xs:element name="zeitstempelVersand" type="xs:time"/>
+                    <xs:element name="version" type="tns:VersionType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="VersionType">
+                <xs:sequence>
+                    <xs:element name="majorVersion" type="xs:string"/>
+                    <xs:element name="minorVersion" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="WunschterminMitZeitangabeType">
+                <xs:sequence>
+                    <xs:element name="datum" type="xs:date"/>
+                    <xs:element minOccurs="0" name="zeit" type="xs:time"/>
+                </xs:sequence>
+            </xs:complexType>
+
+        </xs:schema>
+        <xs:schema xmlns:ns1="http://spri.telekom.de/oss/v4/envelope" xmlns:ns2="http://spri.telekom.de/oss/v4/complex"
+                   xmlns:ns3="http://spri.telekom.de/oss/v4/message" xmlns:ns4="http://spri.telekom.de/oss/v4/order"
+                   xmlns:tns="api.bus.xconnect.de" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   attributeFormDefault="unqualified" elementFormDefault="unqualified"
+                   targetNamespace="api.bus.xconnect.de">
+            <xs:import namespace="http://spri.telekom.de/oss/v4/envelope"/>
+            <xs:import namespace="http://spri.telekom.de/oss/v4/complex"/>
+            <xs:import namespace="http://spri.telekom.de/oss/v4/message"/>
+            <xs:import namespace="http://spri.telekom.de/oss/v4/order"/>
+            <xs:import namespace="http://spri.telekom.de/oss/v4/enm"/>
+            <xs:element name="InhouseMeta" type="tns:InhouseMeta"/>
+            <xs:element name="InhouseResponse" type="tns:InhouseResponse"/>
+            <xs:element name="annehmenAuftragRequest" type="tns:annehmenAuftragRequest"/>
+            <xs:element name="annehmenAuftragRequestResponse" type="tns:annehmenAuftragRequestResponse"/>
+            <xs:element name="annehmenAuftragResponse" type="tns:annehmenAuftragResponse"/>
+            <xs:element name="annehmenAuftragResponseResponse" type="tns:annehmenAuftragResponseResponse"/>
+            <xs:element name="annehmenMeldungRequest" type="tns:annehmenMeldungRequest"/>
+            <xs:element name="annehmenMeldungRequestResponse" type="tns:annehmenMeldungRequestResponse"/>
+            <xs:element name="annehmenMeldungResponse" type="tns:annehmenMeldungResponse"/>
+            <xs:element name="annehmenMeldungResponseResponse" type="tns:annehmenMeldungResponseResponse"/>
+            <xs:complexType name="annehmenMeldungResponse">
+                <xs:sequence>
+                    <xs:element name="annehmenMeldungResponse" type="ns1:AnnehmenMeldungResponseType"/>
+                    <xs:element minOccurs="0" name="inhouseMeta" type="tns:InhouseMeta"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="InhouseMeta">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="messageUuid" type="xs:string"/>
+                    <xs:element name="optionalValues">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="0" name="entry">
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element minOccurs="0" name="key" type="xs:string"/>
+                                            <xs:element minOccurs="0" name="value" type="xs:string"/>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="reponseToMessageUuid" type="xs:string"/>
+                    <xs:element minOccurs="0" name="transmissionUuid" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="annehmenMeldungResponseResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="tns:InhouseResponse"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="InhouseResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="description" type="xs:string"/>
+                    <xs:element minOccurs="0" name="inhouseResponseCode" type="tns:inhouseResponseCode"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="annehmenMeldungRequest">
+                <xs:sequence>
+                    <xs:element name="annehmenMeldungRequest" type="ns1:AnnehmenMeldungRequestType"/>
+                    <xs:element minOccurs="0" name="inhouseMeta" type="tns:InhouseMeta"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="CustomAnlageTyp">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="bus_fileUuid" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="annehmenMeldungRequestResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="tns:InhouseResponse"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="annehmenAuftragRequest">
+                <xs:sequence>
+                    <xs:element name="annehmenAuftragRequest" type="ns1:AnnehmenAuftragRequestType"/>
+                    <xs:element minOccurs="0" name="inhouseMeta" type="tns:InhouseMeta"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="annehmenAuftragRequestResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="tns:InhouseResponse"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="annehmenAuftragResponse">
+                <xs:sequence>
+                    <xs:element name="annehmenAuftragResponse" type="ns1:AnnehmenAuftragResponseType"/>
+                    <xs:element minOccurs="0" name="inhouseMeta" type="tns:InhouseMeta"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="annehmenAuftragResponseResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="tns:InhouseResponse"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:simpleType name="inhouseResponseCode">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="OK"/>
+                    <xs:enumeration value="ERROR"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="Exception" type="tns:Exception"/>
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="message" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="annehmenMeldungRequestResponse">
+        <wsdl:part name="parameters" element="tns:annehmenMeldungRequestResponse">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="annehmenAuftragResponseResponse">
+        <wsdl:part name="parameters" element="tns:annehmenAuftragResponseResponse">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="annehmenMeldungResponseResponse">
+        <wsdl:part name="parameters" element="tns:annehmenMeldungResponseResponse">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="annehmenAuftragResponse">
+        <wsdl:part name="parameters" element="tns:annehmenAuftragResponse">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="annehmenAuftragRequestResponse">
+        <wsdl:part name="parameters" element="tns:annehmenAuftragRequestResponse">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="Exception">
+        <wsdl:part name="Exception" element="tns:Exception">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="annehmenMeldungResponse">
+        <wsdl:part name="parameters" element="tns:annehmenMeldungResponse">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="annehmenMeldungRequest">
+        <wsdl:part name="parameters" element="tns:annehmenMeldungRequest">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="annehmenAuftragRequest">
+        <wsdl:part name="parameters" element="tns:annehmenAuftragRequest">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="Spri_4_0_InhouseServicePort">
+        <wsdl:operation name="annehmenMeldungResponse">
+            <wsdl:input name="annehmenMeldungResponse" message="tns:annehmenMeldungResponse">
+            </wsdl:input>
+            <wsdl:output name="annehmenMeldungResponseResponse" message="tns:annehmenMeldungResponseResponse">
+            </wsdl:output>
+            <wsdl:fault name="Exception" message="tns:Exception">
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="annehmenMeldungRequest">
+            <wsdl:input name="annehmenMeldungRequest" message="tns:annehmenMeldungRequest">
+            </wsdl:input>
+            <wsdl:output name="annehmenMeldungRequestResponse" message="tns:annehmenMeldungRequestResponse">
+            </wsdl:output>
+            <wsdl:fault name="Exception" message="tns:Exception">
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="annehmenAuftragRequest">
+            <wsdl:input name="annehmenAuftragRequest" message="tns:annehmenAuftragRequest">
+            </wsdl:input>
+            <wsdl:output name="annehmenAuftragRequestResponse" message="tns:annehmenAuftragRequestResponse">
+            </wsdl:output>
+            <wsdl:fault name="Exception" message="tns:Exception">
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="annehmenAuftragResponse">
+            <wsdl:input name="annehmenAuftragResponse" message="tns:annehmenAuftragResponse">
+            </wsdl:input>
+            <wsdl:output name="annehmenAuftragResponseResponse" message="tns:annehmenAuftragResponseResponse">
+            </wsdl:output>
+            <wsdl:fault name="Exception" message="tns:Exception">
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="Spri_4_0_InhouseServiceSoapBinding" type="tns:Spri_4_0_InhouseServicePort">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="annehmenMeldungResponse">
+            <soap:operation soapAction="annehmenMeldungResponse" style="document"/>
+            <wsdl:input name="annehmenMeldungResponse">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="annehmenMeldungResponseResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault name="Exception" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="annehmenMeldungRequest">
+            <soap:operation soapAction="annehmenMeldungRequest" style="document"/>
+            <wsdl:input name="annehmenMeldungRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="annehmenMeldungRequestResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault name="Exception" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="annehmenAuftragRequest">
+            <soap:operation soapAction="annehmenAuftragRequest" style="document"/>
+            <wsdl:input name="annehmenAuftragRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="annehmenAuftragRequestResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault name="Exception" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="annehmenAuftragResponse">
+            <soap:operation soapAction="annehmenAuftragResponse" style="document"/>
+            <wsdl:input name="annehmenAuftragResponse">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="annehmenAuftragResponseResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault name="Exception" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="Spri_4_0_InhouseService">
+        <wsdl:port name="Spri_4_0_InhouseServicePort" binding="tns:Spri_4_0_InhouseServiceSoapBinding">
+            <soap:address location="http://localhost:9090/Spri_4_0_InhouseServicePort"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

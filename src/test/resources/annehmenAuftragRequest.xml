@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="api.bus.xconnect.de" xmlns:ns2="http://spri.telekom.de/oss/v4/message" xmlns:ns4="http://spri.telekom.de/oss/v4/order" xmlns:ns5="http://spri.telekom.de/oss/v4/fttx" xmlns:ns6="http://spri.telekom.de/oss/v4/complex">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <api:annehmenAuftragRequest>
+            <annehmenAuftragRequest>
+                <control>
+                    <zeitstempel>2021-12-14T17:13:54.371+02:00</zeitstempel>
+                    <majorRelease>04</majorRelease>
+                    <minorRelease>00</minorRelease>
+                    <signaturId>
+                        <issuer>CN=XConnect Bustest, OU=XConnect, O=SPRI, L=Dueren, ST=NRW, C=DE</issuer>
+                        <serial>1a633668</serial>
+                    </signaturId>
+                </control>
+                <auftrag>
+                    <externeAuftragsnummer>QA1_TEST_NEU_MR_001</externeAuftragsnummer>
+                    <auftraggeber>
+                        <auftraggebernummer>ws01_test</auftraggebernummer>
+                        <leistungsnummer>DOCSIS_V1</leistungsnummer>
+                    </auftraggeber>
+                    <geschaeftsfall xsi:type="ns4:BereitstellungType" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                        <ansprechpartner>
+                            <auftragsmanagement>
+                                <anrede>2</anrede>
+                                <vorname>Autotester</vorname>
+                                <nachname>Selenium</nachname>
+                                <telefonnummer>015785126569</telefonnummer>
+                            </auftragsmanagement>
+                        </ansprechpartner>
+                        <termine>
+                            <auftraggeberWunschtermin>
+                                <datum>2021-12-23</datum>
+                                <zeitfenster>28</zeitfenster>
+                            </auftraggeberWunschtermin>
+                        </termine>
+                        <auftragsposition>
+                            <produkt xsi:type="ns5:ProduktFTTXType">
+                                <bezeichner>P_Speed_10_WS_V1</bezeichner>
+                            </produkt>
+                            <geschaeftsfallProdukt xsi:type="ns5:FTTXBereitstellungType">
+                                <standortA>
+                                    <person>
+                                        <anrede>1</anrede>
+                                        <vorname>Joe</vorname>
+                                        <nachname>McElderry</nachname>
+                                        <mobilfunknummer>015785126569</mobilfunknummer>
+                                    </person>
+                                    <strasse>
+                                        <strassenname>Dillgesstr.</strassenname>
+                                        <hausnummer>46</hausnummer>
+                                    </strasse>
+                                    <land>de</land>
+                                    <postleitzahl>12249</postleitzahl>
+                                    <ort>
+                                        <ortsname>Berlin</ortsname>
+                                    </ort>
+                                </standortA>
+                                <abgebenderEKP>false</abgebenderEKP>
+                            </geschaeftsfallProdukt>
+                        </auftragsposition>
+                    </geschaeftsfall>
+                    <geschaeftsfallArt>Bereitstellung</geschaeftsfallArt>
+                    <aenderungskennzeichen>Standard</aenderungskennzeichen>
+                    <!--<terminNeu>2021-11-09</terminNeu> -->
+                </auftrag>
+            </annehmenAuftragRequest>
+        </api:annehmenAuftragRequest>
+    </soapenv:Body>
+</soapenv:Envelope>

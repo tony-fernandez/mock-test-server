@@ -1,0 +1,1233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2014 sp1 (x64) (http://www.altova.com) von Alexander Roock (T-Systems International GmbH) bearbeitet -->
+<!-- edited with XMLSpy v2010 rel. 3 (http://www.altova.com) by Alexander Roock (T-Systems Enterprise Services GmbH) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:message="http://spri.telekom.de/oss/v4/message"
+			xmlns:complex="http://spri.telekom.de/oss/v4/complex" xmlns:simple="http://spri.telekom.de/oss/v4/simple"
+			xmlns:enum="http://spri.telekom.de/oss/v4/enm" targetNamespace="http://spri.telekom.de/oss/v4/message"
+			version="4.00.03/2014-12-19">
+	<xsd:import namespace="http://spri.telekom.de/oss/v4/complex" schemaLocation="oss-type-complex.xsd"/>
+	<xsd:import namespace="http://spri.telekom.de/oss/v4/simple" schemaLocation="oss-type-simple.xsd"/>
+	<xsd:import namespace="http://spri.telekom.de/oss/v4/enm" schemaLocation="oss-type-enum.xsd"/>
+	<!-- 
+		!
+		! Meldung
+		!
+	-->
+	<xsd:element name="meldung" type="message:MeldungType"/>
+	<xsd:complexType name="MeldungType">
+		<xsd:sequence>
+			<xsd:element name="auftragstyp" type="message:AuftragstypType">
+				<xsd:annotation>
+					<xsd:documentation>die Klassifizierung des zugehörigen Auftrags</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="meldungstyp" type="message:MeldungstypAbstractType">
+				<xsd:annotation>
+					<xsd:documentation>Erweiterungspunkt: Hier kommen Attribute und Positionsattribute zum jeweiligen
+						Meldungstyp hinzu.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AuftragstypType">
+		<xsd:sequence>
+			<xsd:element name="geschaeftsfall" type="enum:GeschaeftsfallMeldungType"/>
+			<xsd:element name="aenderungsKennzeichen" type="enum:AenderungskennzeichenType"/>
+			<xsd:element name="geschaeftsfallart" type="enum:GeschaeftsfallArtType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungstypAbstractType" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>die abstrakte Basisklasse der verschiedenen Meldunsgtypen</xsd:documentation>
+		</xsd:annotation>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeType" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>Die abstrakte Basisklasse der Meldungsattribute zu den verschiedenen Meldunsgtypen
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungspositionsattributeType" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>die abstrakte Basisklasse der Meldungspositiponsattribute zu den verschiedenen
+				Meldunsgtypen
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:complexType>
+	<xsd:element name="meldungsposition" type="message:MeldungspositionType"/>
+	<xsd:complexType name="MeldungspositionType">
+		<xsd:annotation>
+			<xsd:documentation>Meldungsposition mit Positionsattributen.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="complex:MeldungspositionOhneAttributeType">
+				<xsd:sequence>
+					<xsd:element name="positionsattribute" type="message:MeldungspositionsattributeType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>der Erweiterungspunkt für die Ergänzung der Attribute zur
+								Meldungsposition
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungspositionOhneAttributeMitWitaErweiterungType">
+		<xsd:annotation>
+			<xsd:documentation>Meldungsposition ohne Attribute jedoch mit WITA-Erweiterungen.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="complex:MeldungspositionOhneAttributeType">
+				<xsd:sequence>
+					<xsd:group ref="message:WitaMeldungspositionsInfosGroup"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungspositionMitWitaErweiterungType">
+		<xsd:annotation>
+			<xsd:documentation>Meldungsposition mit Positionsattributen und WITA-Erweiterungen.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungspositionOhneAttributeMitWitaErweiterungType">
+				<xsd:sequence>
+					<xsd:element name="positionsattribute" type="message:MeldungspositionsattributeType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>der Erweiterungspunkt für die Ergänzung der Attribute zur
+								Meldungsposition
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:group name="WitaMeldungspositionsInfosGroup">
+		<xsd:sequence>
+			<xsd:element name="witaMeldungscode" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Kurzbezeichnung zum Meldungstext welcher, dem EKP bei der Bereitstellung des DTAG
+						Vorleistungsproduktes übergeben wurde.
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="10"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="witaMeldungstext" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Ausführliche Beschreibung für den entsprechenden WITA-Meldungscode.
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="0"/>
+						<xsd:maxLength value="255"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<!-- 
+		!
+		! ABM
+		!
+	-->
+	<xsd:element name="ABM" type="message:MeldungstypABMType"/>
+	<xsd:complexType name="MeldungstypABMType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeABMType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - ABM</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - ABM</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position" type="message:MeldungspositionMitWitaErweiterungType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeABMType">
+		<xsd:annotation>
+			<xsd:documentation>Meldungsattribute zum Meldungstyp - ABM</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="auftraggebernummerBesteller" type="simple:AuftraggebernummerType" minOccurs="0"/>
+					<xsd:element name="vorabstimmungId" type="simple:VorabstimmungIdType" minOccurs="0"/>
+					<xsd:element name="verbindlicherLiefertermin" type="complex:WunschterminType"/>
+					<xsd:element name="abgebenderProvider" type="complex:ProviderwechselRueckmeldungType"
+								 minOccurs="0"/>
+					<xsd:element name="anschluss" type="complex:FTTxAnschlussType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="ABMpos" type="message:MeldungspositionsattributeABMType"/>
+	<xsd:complexType name="MeldungspositionsattributeABMType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungspositionsattributeType">
+				<xsd:sequence>
+					<xsd:annotation>
+						<xsd:documentation>Daten zum speziellen Meldungstyp</xsd:documentation>
+					</xsd:annotation>
+					<xsd:element name="ansprechpartnerLeistungserbringer" type="complex:AnsprechpartnerType">
+						<xsd:annotation>
+							<xsd:documentation>Hinweis zum Ansprechpartner beim Leistungserbringer für evtl.
+								Rückfragen
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! ABBM
+		!
+	-->
+	<xsd:element name="ABBM" type="message:MeldungstypABBMType"/>
+	<xsd:complexType name="MeldungstypABBMType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeABBMType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - ABBM</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - ABBM</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position"
+											 type="message:MeldungspositionOhneAttributeMitWitaErweiterungType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeABBMType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:annotation>
+						<xsd:documentation>Daten zum speziellen Meldungstyp</xsd:documentation>
+					</xsd:annotation>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>die Vertragsnummer, sofern bereits vorhanden und relevant
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="auftraggebernummerBesteller" type="simple:AuftraggebernummerType" minOccurs="0"/>
+					<xsd:element name="vorabstimmungId" type="simple:VorabstimmungIdType" minOccurs="0"/>
+					<xsd:element name="wiedervorlagetermin" type="xsd:date" minOccurs="0"/>
+					<xsd:element name="abgebenderProvider" type="complex:ProviderwechselRueckmeldungType"
+								 minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! ERLM
+		!
+	-->
+	<xsd:element name="ERLM" type="message:MeldungstypERLMType"/>
+	<xsd:complexType name="MeldungstypERLMType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeERLMType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - ERLM</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - ERLM</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position"
+											 type="message:MeldungspositionOhneAttributeMitWitaErweiterungType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeERLMType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:annotation>
+						<xsd:documentation>Daten zum speziellen Meldungstyp</xsd:documentation>
+					</xsd:annotation>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType" minOccurs="0"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="auftraggebernummerBesteller" type="simple:AuftraggebernummerType" minOccurs="0"/>
+					<xsd:element name="vorabstimmungId" type="simple:VorabstimmungIdType" minOccurs="0"/>
+					<xsd:element name="erledigungstermin" type="xsd:date"/>
+					<xsd:element name="entstoerErgebnis" type="message:EntstoerungErgebnisType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Bei GF Entstörung: Ergebnis der Entstörung.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="anlage" type="complex:AnlageMitTypType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Anlage mit Klassifizierung (Anlagentyp)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="dignoseergebnis" type="message:DiagnoseErgebnisType" minOccurs="0"
+								 maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Bei GF DIAG-GET, DIAG-SET: Ergebnis der Diagnose.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="EntstoerungErgebnisType">
+		<xsd:sequence>
+			<xsd:element name="ergebnis">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="FehlerBeseitigt"/>
+						<xsd:enumeration value="KeinenFehlerGefunden"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="entstoerZeitpunkt" type="xsd:date" minOccurs="0"/>
+			<xsd:element name="anmerkung" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="1024"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="DiagnoseErgebnisType">
+		<xsd:sequence>
+			<xsd:element name="name">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="20"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="wert">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="1024"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		! ENTM
+		!
+	-->
+	<xsd:element name="ENTM" type="message:MeldungstypENTMType"/>
+	<xsd:complexType name="MeldungstypENTMType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeENTMType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - ENTM</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - ENTM</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position" type="complex:MeldungspositionOhneAttributeType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeENTMType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:annotation>
+						<xsd:documentation>Daten zum speziellen Meldungstyp</xsd:documentation>
+					</xsd:annotation>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="auftraggebernummerBesteller" type="simple:AuftraggebernummerType" minOccurs="0"/>
+					<xsd:element name="vorabstimmungId" type="simple:VorabstimmungIdType" minOccurs="0"/>
+					<xsd:element name="entgelttermin" type="xsd:date"/>
+					<xsd:element name="anlage" type="complex:AnlageMitTypType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Anlage mit Klassifizierung (Anlagentyp)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! QEB
+		!
+	-->
+	<xsd:element name="QEB" type="message:MeldungstypQEBType"/>
+	<xsd:complexType name="MeldungstypQEBType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeQEBType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - QEB</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - QEB</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position" type="message:MeldungspositionType" maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeQEBType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:annotation>
+						<xsd:documentation>Daten zum speziellen Meldungstyp</xsd:documentation>
+					</xsd:annotation>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="auftraggebernummerBesteller" type="simple:AuftraggebernummerType" minOccurs="0"/>
+					<xsd:element name="vorabstimmungId" type="simple:VorabstimmungIdType" minOccurs="0"/>
+					<xsd:element name="stoerungsNrLeistungserbringer" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Bei GF Entstörung: Störungsnr./TicketNr des Leistungserbringers.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:minLength value="1"/>
+								<xsd:maxLength value="30"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="QEBpos" type="message:MeldungspositionsattributeQEBType"/>
+	<xsd:complexType name="MeldungspositionsattributeQEBType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungspositionsattributeType">
+				<xsd:sequence>
+					<xsd:annotation>
+						<xsd:documentation>Daten zum speziellen Meldungstyp</xsd:documentation>
+					</xsd:annotation>
+					<xsd:element name="ansprechpartnerLeistungserbringer" type="complex:AnsprechpartnerType">
+						<xsd:annotation>
+							<xsd:documentation>Hinweis zum Ansprechpartner beim Leistungserbringer für evtl.
+								Rückfragen
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! TAM
+		!
+	-->
+	<xsd:element name="TAM" type="message:MeldungstypTAMType"/>
+	<xsd:complexType name="MeldungstypTAMType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeTAMType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - TAM</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - TAM</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position"
+											 type="message:MeldungspositionOhneAttributeMitWitaErweiterungType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeTAMType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:annotation>
+						<xsd:documentation>Daten zum speziellen Meldungstyp</xsd:documentation>
+					</xsd:annotation>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="auftraggebernummerBesteller" type="simple:AuftraggebernummerType" minOccurs="0"/>
+					<xsd:element name="vorabstimmungId" type="simple:VorabstimmungIdType" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! MTAM (Mahn-Terminanforderungsmeldung)
+		!
+	-->
+	<xsd:element name="MTAM" type="message:MeldungstypMTAMType"/>
+	<xsd:complexType name="MeldungstypMTAMType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeMTAMType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - MTAM</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - MTAM</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position"
+											 type="message:MeldungspositionOhneAttributeMitWitaErweiterungType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeMTAMType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:annotation>
+						<xsd:documentation>Daten zum speziellen Meldungstyp</xsd:documentation>
+					</xsd:annotation>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="auftraggebernummerBesteller" type="simple:AuftraggebernummerType" minOccurs="0"/>
+					<xsd:element name="vorabstimmungId" type="simple:VorabstimmungIdType" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! VZM
+		!
+	-->
+	<xsd:element name="VZM" type="message:MeldungstypVZMType"/>
+	<xsd:complexType name="MeldungstypVZMType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeVZMType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - VZM</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - VZM</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position"
+											 type="message:MeldungspositionOhneAttributeMitWitaErweiterungType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeVZMType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:annotation>
+						<xsd:documentation>Daten zum speziellen Meldungstyp</xsd:documentation>
+					</xsd:annotation>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>die Vertragsnummer, sofern bereits vorhanden und relevant
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="auftraggebernummerBesteller" type="simple:AuftraggebernummerType" minOccurs="0"/>
+					<xsd:element name="vorabstimmungId" type="simple:VorabstimmungIdType" minOccurs="0"/>
+					<xsd:element name="verzoegerungstermin" type="xsd:date" minOccurs="0"/>
+					<xsd:element name="verzoegerungsgrund" minOccurs="0">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:minLength value="1"/>
+								<xsd:maxLength value="1024"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! KDLE (Kündigung durch Leistungserbringer)
+		!
+	-->
+	<xsd:element name="KDLE" type="message:MeldungstypKDLEType"/>
+	<xsd:complexType name="MeldungstypKDLEType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeKDLEType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - KDLE</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - KDLE</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position" type="complex:MeldungspositionOhneAttributeType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeKDLEType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:annotation>
+						<xsd:documentation>Daten zum speziellen Meldungstyp</xsd:documentation>
+					</xsd:annotation>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="abschaltungstermin" type="xsd:date">
+						<xsd:annotation>
+							<xsd:documentation>Der Termin zu dem die Abschaltung der angegebenen Produkte seitens des
+								Leistungserbringers erfolgen wird.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="abschaltungsgrund" minOccurs="0">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:minLength value="1"/>
+								<xsd:maxLength value="1024"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! ZWM (Zwischenmeldung)
+		!
+	-->
+	<xsd:element name="ZWM-LE" type="message:MeldungstypZWM-LEType"/>
+	<xsd:element name="ZWM-AG" type="message:MeldungstypZWM-AGType"/>
+	<xsd:complexType name="MeldungstypZWM-LEType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeZWM-LEType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - ZWM-LE</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - ZWM-LE</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position" type="complex:MeldungspositionOhneAttributeType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungstypZWM-AGType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeZWM-AGType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - ZWM-AG</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - ZWM-AG</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position" type="complex:MeldungspositionOhneAttributeType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeZWM-AGType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:annotation>
+						<xsd:documentation>Daten zum speziellen Meldungstyp</xsd:documentation>
+					</xsd:annotation>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="auftraggebernummerBesteller" type="simple:AuftraggebernummerType" minOccurs="0"/>
+					<xsd:element name="nachricht">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:minLength value="1"/>
+								<xsd:maxLength value="1024"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="ansprechpartner" type="complex:AnsprechpartnerMitRolleType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Ansprechpartner beim Leistungserbringer bzw. Auftraggeber für evtl.
+								Rückfragen.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="anlage" type="complex:AnlageMitTypType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Anlage mit Klassifizierung (Anlagentyp)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeZWM-LEType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:annotation>
+						<xsd:documentation>Daten zum speziellen Meldungstyp</xsd:documentation>
+					</xsd:annotation>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="auftraggebernummerBesteller" type="simple:AuftraggebernummerType" minOccurs="0"/>
+					<xsd:element name="vorabstimmungId" type="simple:VorabstimmungIdType" minOccurs="0"/>
+					<xsd:element name="nachricht">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:minLength value="1"/>
+								<xsd:maxLength value="1024"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="ansprechpartner" type="complex:AnsprechpartnerMitRolleType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Ansprechpartner beim Leistungserbringer bzw. Auftraggeber für evtl.
+								Rückfragen.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="anlage" type="complex:AnlageMitTypType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Anlage mit Klassifizierung (Anlagentyp)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="versandONT" type="complex:FTTxVersandinfosONTType" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! TBK (Termin beim Kunden)
+		!
+	-->
+	<xsd:element name="TBK-LE" type="message:MeldungstypTBK-LEType"/>
+	<xsd:element name="TBK-AG" type="message:MeldungstypTBK-AGType"/>
+	<xsd:complexType name="MeldungstypTBKType" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>TerminBeimKunden-Meldung (abstrakter Basistyp)</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeTBKType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - TBK</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - TBK</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position" type="complex:MeldungspositionOhneAttributeType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungstypTBK-LEType">
+		<xsd:annotation>
+			<xsd:documentation>TerminBeimKunden-Meldung des Leistungserbringers (derzeit identisch zum Basistyp)
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypTBKType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungstypTBK-AGType">
+		<xsd:annotation>
+			<xsd:documentation>TerminBeimKunden-Meldung des Auftraggebers (derzeit identisch zum Basistyp)
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypTBKType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeTBKType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:annotation>
+						<xsd:documentation>Daten zum speziellen Meldungstyp</xsd:documentation>
+					</xsd:annotation>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="auftraggebernummerBesteller" type="simple:AuftraggebernummerType" minOccurs="0"/>
+					<xsd:element name="termin" type="complex:WunschterminMitZeitangabeUndZeitfensterType">
+						<xsd:annotation>
+							<xsd:documentation>Termin des durchzuführenden Besuchs beim Kunden.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! AKM-PV (Ankündigung an abgebenden Provider [Providerwechsel])
+		!
+	-->
+	<xsd:element name="AKM-PV" type="message:MeldungstypAKM-PVType"/>
+	<xsd:complexType name="MeldungstypAKM-PVType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeAKM-PVType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - AKM-PV</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - AKM-PV</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position" type="complex:MeldungspositionOhneAttributeType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeAKM-PVType">
+		<xsd:annotation>
+			<xsd:documentation>Meldungsattribute zum Meldungstyp - AKM-PV</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="vorabstimmungId" type="simple:VorabstimmungIdType" minOccurs="0"/>
+					<xsd:element name="anschluss" type="complex:FTTxAnschlussEinfachType"/>
+					<xsd:element name="anlage" type="complex:AnlageMitTypType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Anlage mit Klassifizierung (Anlagentyp)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="aufnehmenderProvider" type="complex:ProviderwechselAnkuendigungType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! RUEM-PV (Rückmeldung vom abgebenden Provider [Providerwechsel])
+		!
+	-->
+	<xsd:element name="RUEM-PV" type="message:MeldungstypRUEM-PVType"/>
+	<xsd:complexType name="MeldungstypRUEM-PVType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeRUEM-PVType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - RUEM-PV</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - RUEM-PV</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position" type="complex:MeldungspositionOhneAttributeType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeRUEM-PVType">
+		<xsd:annotation>
+			<xsd:documentation>Meldungsattribute zum Meldungstyp - RUEM-PV</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="vorabstimmungId" type="simple:VorabstimmungIdType" minOccurs="0"/>
+					<xsd:element name="anschluss" type="complex:FTTxAnschlussEinfachType"/>
+					<xsd:element name="abgebenderProvider" type="complex:ProviderwechselRueckmeldungType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! ABM-PV (Auftragsbestätigungsmeldung an abgebenden Provider [Providerwechsel])
+		!
+	-->
+	<xsd:element name="ABM-PV" type="message:MeldungstypABM-PVType"/>
+	<xsd:complexType name="MeldungstypABM-PVType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeABM-PVType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - ABM-PV</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - ABM-PV</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position" type="complex:MeldungspositionOhneAttributeType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeABM-PVType">
+		<xsd:annotation>
+			<xsd:documentation>Meldungsattribute zum Meldungstyp - ABM-PV</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="anschluss" type="complex:FTTxAnschlussEinfachType"/>
+					<xsd:element name="aufnehmenderProvider" type="complex:ProviderwechselBestaetigungType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! ERLM-PV (Erledigungsmeldung an abgebenden Provider [Providerwechsel])
+		!
+	-->
+	<xsd:element name="ERLM-PV" type="message:MeldungstypERLM-PVType"/>
+	<xsd:complexType name="MeldungstypERLM-PVType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeERLM-PVType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - ERLM-PV</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - ERLM-PV</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position" type="complex:MeldungspositionOhneAttributeType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeERLM-PVType">
+		<xsd:annotation>
+			<xsd:documentation>Meldungsattribute zum Meldungstyp - ERLM-PV</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="erledigungstermin" type="xsd:date"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! ENTM-PV (Entgeltmeldung an abgebenden Provider [Providerwechsel])
+		!
+	-->
+	<xsd:element name="ENTM-PV" type="message:MeldungstypENTM-PVType"/>
+	<xsd:complexType name="MeldungstypENTM-PVType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeENTM-PVType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - ENTM-PV</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - ENTM-PV</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position" type="complex:MeldungspositionOhneAttributeType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeENTM-PVType">
+		<xsd:annotation>
+			<xsd:documentation>Meldungsattribute zum Meldungstyp - ENTM-PV</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="entgelttermin" type="xsd:date"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! ABBM-PV (Abbruchmeldung an abgebenden Provider [Providerwechsel])
+		!
+	-->
+	<xsd:element name="ABBM-PV" type="message:MeldungstypABBM-PVType"/>
+	<xsd:complexType name="MeldungstypABBM-PVType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeABBM-PVType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - ABBM-PV</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - ABBM-PV</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position" type="complex:MeldungspositionOhneAttributeType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeABBM-PVType">
+		<xsd:annotation>
+			<xsd:documentation>Meldungsattribute zum Meldungstyp - ABBM-PV</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType" minOccurs="0"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! ERLM-K (Erledigungsmeldung-Kunde)
+		!
+	-->
+	<xsd:element name="ERLM-K" type="message:MeldungstypERLM-KType"/>
+	<xsd:complexType name="MeldungstypERLM-KType">
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungstypAbstractType">
+				<xsd:sequence>
+					<xsd:element name="meldungsattribute" type="message:MeldungsattributeERLM-KType">
+						<xsd:annotation>
+							<xsd:documentation>Meldungsattribute zum Meldungstyp - ERLM-K</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="meldungspositionen">
+						<xsd:annotation>
+							<xsd:documentation>Meldungspositionen zum Meldungstyp - ERLM-K</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="position" type="complex:MeldungspositionOhneAttributeType"
+											 maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MeldungsattributeERLM-KType">
+		<xsd:annotation>
+			<xsd:documentation>Meldungsattribute zum Meldungstyp - ERLM-K</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="message:MeldungsattributeType">
+				<xsd:sequence>
+					<xsd:annotation>
+						<xsd:documentation>Daten zum speziellen Meldungstyp</xsd:documentation>
+					</xsd:annotation>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType"/>
+					<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType"/>
+					<xsd:element name="auftraggebernummer" type="simple:AuftraggebernummerType"/>
+					<xsd:element name="auftraggebernummerBesteller" type="simple:AuftraggebernummerType" minOccurs="0"/>
+					<xsd:element name="vorabstimmungId" type="simple:VorabstimmungIdType" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+</xsd:schema>

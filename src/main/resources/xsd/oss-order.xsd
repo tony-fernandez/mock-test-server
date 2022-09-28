@@ -1,0 +1,803 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2014 sp1 (x64) (http://www.altova.com) von Alexander Roock (T-Systems International GmbH) bearbeitet -->
+<!-- edited with XMLSpy v2010 rel. 3 (http://www.altova.com) by Alexander Roock (T-Systems Enterprise Services GmbH) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:order="http://spri.telekom.de/oss/v4/order"
+			xmlns:complex="http://spri.telekom.de/oss/v4/complex" xmlns:simple="http://spri.telekom.de/oss/v4/simple"
+			xmlns:enum="http://spri.telekom.de/oss/v4/enm" targetNamespace="http://spri.telekom.de/oss/v4/order"
+			version="4.00.03/2014-12-19">
+	<xsd:import namespace="http://spri.telekom.de/oss/v4/complex" schemaLocation="oss-type-complex.xsd"/>
+	<xsd:import namespace="http://spri.telekom.de/oss/v4/simple" schemaLocation="oss-type-simple.xsd"/>
+	<xsd:import namespace="http://spri.telekom.de/oss/v4/enm" schemaLocation="oss-type-enum.xsd"/>
+	<!-- 
+		!
+		! Auftrag
+		!
+	-->
+	<xsd:element name="auftrag" type="order:AuftragType"/>
+	<xsd:complexType name="AuftragType">
+		<xsd:sequence>
+			<xsd:element name="externeAuftragsnummer" type="simple:ExterneAuftragsnummerType">
+				<xsd:annotation>
+					<xsd:documentation>Eindeutige ID des Auftraggebers für den Auftrag. Durch den Auftraggeber zu
+						vergeben.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="auftraggeber" type="complex:AuftraggeberType">
+				<xsd:annotation>
+					<xsd:documentation>Eindeutige ID, die den Auftraggeber kennzeichnet.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="besteller" type="complex:AuftraggeberType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Infos zum Besteller, für den Fall dass der Besteller im Namen eines anderen
+						Kunden handelt (nur bei Beauftragung im Namen Dritter)
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="geschaeftsfall" type="complex:GeschaeftsfallType">
+				<xsd:annotation>
+					<xsd:documentation>Der konkret einzusetzende Geschäftsfall für den Auftrag (Erweiterungspunkt)
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="geschaeftsfallArt" type="enum:GeschaeftsfallArtType">
+				<xsd:annotation>
+					<xsd:documentation>Beschreibt die übergeordnete Art des Geschäftsfalles.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="aenderungskennzeichen" type="enum:AenderungskennzeichenType">
+				<xsd:annotation>
+					<xsd:documentation>Definiert die genaue Ausprägung des Auftrags (Standard, Storno,
+						Terminverschiebung)
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="terminNeu" type="xsd:date" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Neuer Termin. Nur anzugeben bei Terminverschiebung.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="kenner" type="complex:KennerType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>ID zur Gruppierung von Aufträgen.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AnsprechpartnerType">
+		<xsd:sequence>
+			<xsd:element name="auftragsmanagement" type="complex:AnsprechpartnerType">
+				<xsd:annotation>
+					<xsd:documentation>Angaben zu Ansprechpartnern beim Auftraggeber für das Auftragsmanagement.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ansprechpartner" type="complex:AnsprechpartnerMitRolleType" minOccurs="0"
+						 maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Angaben zu weiteren Ansprechpartnern beim Auftraggeber.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		!  Auftragsposition
+		!
+	-->
+	<xsd:element name="auftragsposition" type="order:AuftragspositionType"/>
+	<xsd:complexType name="AuftragspositionType">
+		<xsd:sequence>
+			<xsd:element name="produkt" type="complex:ProduktType">
+				<xsd:annotation>
+					<xsd:documentation>die Beschreibung des Produktes der Auftragsposition</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AenderungPositionType">
+		<xsd:complexContent>
+			<xsd:extension base="order:AuftragspositionType">
+				<xsd:sequence>
+					<xsd:element name="aktionscode" type="enum:AktionscodeType">
+						<xsd:annotation>
+							<xsd:documentation>Kenner für Zugang Wegfall oder Änderung des Produktes</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- 
+		!
+		! Bereitstellung
+		!
+	-->
+	<xsd:element name="NEU" type="order:BereitstellungType"/>
+	<xsd:complexType name="BereitstellungType">
+		<xsd:complexContent>
+			<xsd:extension base="complex:GeschaeftsfallType">
+				<xsd:sequence>
+					<xsd:element name="vorabstimmungId" type="simple:VorabstimmungIdType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>ID welche auf den erfolgten Vorabstimmungsprozess zwischen aufnehmenden
+								und abgebenden Endkundenprovider referenziert.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="anlage" type="complex:AnlageMitTypType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Anlage mit Klassifizierung (Anlagentyp)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ansprechpartner" type="order:AnsprechpartnerType">
+						<xsd:annotation>
+							<xsd:documentation>Angaben zu Ansprechpartnern beim Auftraggeber.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="termine" type="order:BereitstellungTermineType">
+						<xsd:annotation>
+							<xsd:documentation>Angaben zu Terminen</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="auftragsposition" type="order:AuftragspositionBereitstellungType">
+						<xsd:annotation>
+							<xsd:documentation>Liste der Auftragspositionen, in der die Produkte / Leistungsmerkmale
+								aufgeführt sind, die im Auftrag bearbeitet werden sollen
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="AuftragspositionBereitstellungType">
+		<xsd:sequence>
+			<xsd:element name="produkt" type="complex:ProduktType">
+				<xsd:annotation>
+					<xsd:documentation>die Beschreibung des Produktes der Auftragsposition (Erweiterungspunkt)
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="geschaeftsfallProdukt" type="order:BereitstellungProduktType">
+				<xsd:annotation>
+					<xsd:documentation>Die geschäftsfallspezifischen Angaben zum Produkt (Erweiterungspunkt)
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="position" type="order:AuftragspositionType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Die Unterspositionen zur Auftragsposition, dies können z.B. TriplePlay oder
+						Expressentstörung sein.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="BereitstellungProduktType" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>die abstrakte Basis für alle geschäftsfall-spezifischen Produkt-Daten
+				(Erweiterungspunkt)
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="complex:GeschaeftsfallProduktType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="BereitstellungTermineType">
+		<xsd:annotation>
+			<xsd:documentation>die möglichen Termine für eine Bereitstellung</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="auftraggeberWunschtermin" type="complex:WunschterminType">
+				<xsd:annotation>
+					<xsd:documentation>Terminwunsch des Auftraggebers zu dem das Produkt betriebsfähig bereitgestellt
+						werden soll.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		! Kündigung
+		!
+	-->
+	<xsd:element name="KUE-AG" type="order:KuendigungType"/>
+	<xsd:complexType name="KuendigungType">
+		<xsd:complexContent>
+			<xsd:extension base="complex:GeschaeftsfallType">
+				<xsd:sequence>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType">
+						<xsd:annotation>
+							<xsd:documentation>bezeichnet den Einzelvertrag, auf den sich der Auftrag bezeieht
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="lineId" type="simple:LineIdType">
+						<xsd:annotation>
+							<xsd:documentation>Die eindeutige Line-Id, die den Kundenanschluss kennzeichnet (bestehend
+								aus Country-, Carrier- und Line-Code).
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="vorabstimmungId" type="simple:VorabstimmungIdType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>ID welche auf den erfolgten Vorabstimmungsprozess zwischen aufnehmenden
+								und abgebenden Endkundenprovider referenziert.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="anlage" type="complex:AnlageMitTypType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Anlage mit Klassifizierung (Anlagentyp)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ansprechpartner" type="order:AnsprechpartnerType">
+						<xsd:annotation>
+							<xsd:documentation>Angaben zu Ansprechpartnern beim Auftraggeber.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="termine" type="order:KuendigungTermineType">
+						<xsd:annotation>
+							<xsd:documentation>Angaben zu Terminen</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="auftragsposition" type="order:AuftragspositionKuendigungType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Liste der Auftragspositionen, in der die Produkte / Leistungsmerkmale
+								aufgeführt sind, die im Auftrag bearbeitet werden sollen
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="AuftragspositionKuendigungType">
+		<xsd:sequence>
+			<xsd:element name="geschaeftsfallProdukt" type="order:KuendigungProduktType">
+				<xsd:annotation>
+					<xsd:documentation>Die geschäftsfallspezifischen Angaben zum Produkt (Erweiterungspunkt)
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="KuendigungProduktType" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>die abstrakte Basis für alle geschäftsfall-spezifischen Produkt-Daten
+				(Erweiterungspunkt)
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="complex:GeschaeftsfallProduktType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="KuendigungTermineType">
+		<xsd:annotation>
+			<xsd:documentation>die möglichen Termine für eine Kündigung</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="auftraggeberWunschtermin" type="complex:WunschterminType">
+				<xsd:annotation>
+					<xsd:documentation>Terminwunsch des Auftraggebers zu dem das Produkt gekündigt werden soll.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		! Leistungsänderung
+		!
+	-->
+	<xsd:element name="LAE" type="order:LeistungsaenderungType"/>
+	<xsd:complexType name="LeistungsaenderungType">
+		<xsd:complexContent>
+			<xsd:extension base="complex:GeschaeftsfallType">
+				<xsd:sequence>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType">
+						<xsd:annotation>
+							<xsd:documentation>bezeichnet den Einzelvertrag, auf den sich der Auftrag bezeieht
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="lineId" type="simple:LineIdType">
+						<xsd:annotation>
+							<xsd:documentation>Die eindeutige Line-Id, die den Kundenanschluss kennzeichnet (bestehend
+								aus Country-, Carrier- und Line-Code).
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="anlage" type="complex:AnlageMitTypType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Anlage mit Klassifizierung (Anlagentyp)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ansprechpartner" type="order:AnsprechpartnerType">
+						<xsd:annotation>
+							<xsd:documentation>Angaben zu Ansprechpartnern beim Auftraggeber.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="termine" type="order:LeistungsaenderungTermineType">
+						<xsd:annotation>
+							<xsd:documentation>Terminwunsch des Auftraggebers zu dem die Leistungsänderung wirksam
+								werden soll.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="auftragsposition" type="order:AuftragspositionLeistungsaenderungType">
+						<xsd:annotation>
+							<xsd:documentation>Liste der Auftragspositionen, in der die Produkte aufgeführt sind, die zu
+								ändern sind
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="AuftragspositionLeistungsaenderungType">
+		<xsd:sequence>
+			<xsd:element name="produkt" type="complex:ProduktType">
+				<xsd:annotation>
+					<xsd:documentation>die Beschreibung des Produktes der Auftragsposition (Erweiterungspunkt)
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="position" type="order:AenderungPositionType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>die Unterspositionen zur Auftragsposition; hier die Veränderungen an den
+						Leistungsmerkmalen
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="LeistungsaenderungProduktType" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>die abstrakte Basis für alle geschäftsfall-spezifischen Produkt-Daten
+				(Erweiterungspunkt)
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="complex:GeschaeftsfallProduktType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="LeistungsaenderungTermineType">
+		<xsd:annotation>
+			<xsd:documentation>Die möglichen Termine für eine Leistungsänderung.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="auftraggeberWunschtermin" type="complex:WunschterminType">
+				<xsd:annotation>
+					<xsd:documentation>Terminwunsch des Auftraggebers zu dem Leistungsänderung erfolgen soll.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		! LeistungsmerkmalÄnderung
+		!
+	-->
+	<xsd:element name="AEN-LMAE" type="order:LeistungsmerkmalAenderungType"/>
+	<xsd:complexType name="LeistungsmerkmalAenderungType">
+		<xsd:complexContent>
+			<xsd:extension base="complex:GeschaeftsfallType">
+				<xsd:sequence>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType">
+						<xsd:annotation>
+							<xsd:documentation>bezeichnet den Einzelvertrag, auf den sich der Auftrag bezeieht
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="lineId" type="simple:LineIdType">
+						<xsd:annotation>
+							<xsd:documentation>Die eindeutige Line-Id, die den Kundenanschluss kennzeichnet (bestehend
+								aus Country-, Carrier- und Line-Code).
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="anlage" type="complex:AnlageMitTypType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Anlage mit Klassifizierung (Anlagentyp)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ansprechpartner" type="order:AnsprechpartnerType">
+						<xsd:annotation>
+							<xsd:documentation>Angaben zu Ansprechpartnern beim Auftraggeber.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="termine" type="order:LeistungsmerkmalAenderungTermineType">
+						<xsd:annotation>
+							<xsd:documentation>Angaben zu Terminen</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="auftragsposition" type="order:AuftragspositionLeistungsmerkmalAenderungType">
+						<xsd:annotation>
+							<xsd:documentation>Liste der Auftragspositionen, in der die Produkte aufgeführt sind, deren
+								Leistungsmerkmale im Auftrag bearbeitet werden sollen; die Leistungsmerkmaländerungen
+								sind in den Unterpositionen anzugeben
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="AuftragspositionLeistungsmerkmalAenderungType">
+		<xsd:sequence>
+			<xsd:element name="produkt" type="complex:ProduktType">
+				<xsd:annotation>
+					<xsd:documentation>die Beschreibung des Produktes der Auftragsposition (Erweiterungspunkt)
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="position" type="order:AenderungPositionType" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>die Unterspositionen zur Auftragsposition; hier die Veränderungen an den
+						Leistungsmerkmalen
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="LeistungsmerkmalAenderungProduktType" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>die abstrakte Basis für alle geschäftsfall-spezifischen Produkt-Daten
+				(Erweiterungspunkt)
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="complex:GeschaeftsfallProduktType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="LeistungsmerkmalAenderungTermineType">
+		<xsd:annotation>
+			<xsd:documentation>die möglichen Termine für eine Leistungsmerkmaländerung</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="auftraggeberWunschtermin" type="complex:WunschterminType">
+				<xsd:annotation>
+					<xsd:documentation>Terminwunsch des Auftraggebers zu dem die Leistungsmerkmaländerung wirksam werden
+						soll.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		! Entstörung
+		!
+	-->
+	<xsd:element name="EST" type="order:EntstoerungType"/>
+	<xsd:complexType name="EntstoerungType">
+		<xsd:complexContent>
+			<xsd:extension base="complex:GeschaeftsfallType">
+				<xsd:sequence>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType">
+						<xsd:annotation>
+							<xsd:documentation>bezeichnet den Einzelvertrag, auf den sich der Auftrag bezeieht
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="lineId" type="simple:LineIdType">
+						<xsd:annotation>
+							<xsd:documentation>Die eindeutige Line-Id, die den Kundenanschluss kennzeichnet (bestehend
+								aus Country-, Carrier- und Line-Code).
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="anlage" type="complex:AnlageMitTypType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Anlage mit Klassifizierung (Anlagentyp)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ansprechpartner" type="order:AnsprechpartnerType">
+						<xsd:annotation>
+							<xsd:documentation>Angaben zu Ansprechpartnern beim Auftraggeber.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="kontaktEndkunde" type="complex:AnsprechpartnerESTType">
+						<xsd:annotation>
+							<xsd:documentation>Kontaktdaten des Endkunden.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="termine" type="order:EntstoerungTermineType">
+						<xsd:annotation>
+							<xsd:documentation>Angaben zu Terminen</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="stoerungsNrAuftraggeber">
+						<xsd:annotation>
+							<xsd:documentation>Störungsnummer bzw. Ticket-Id des Auftraggeber.</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:minLength value="1"/>
+								<xsd:maxLength value="30"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="reklamation" type="order:EntstoerungsReklamationType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Im Falle einer Reklamation einer Entstörung zu setzen.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="vorpruefungErfolgt" type="xsd:boolean">
+						<xsd:annotation>
+							<xsd:documentation>Ist eine Vorprüfung durch den Leistungsnehmer erfolgt.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="stoerungsbeschreibung">
+						<xsd:annotation>
+							<xsd:documentation>Qualifizierte Störungsbeschreibung.</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:minLength value="1"/>
+								<xsd:maxLength value="1024"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="expressentstoerung" type="xsd:boolean" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Wird angegeben, falls der Entstörauftrag als Expressentstörung behandelt
+								werden soll.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="EntstoerungsReklamationType">
+		<xsd:annotation>
+			<xsd:documentation>Angaben bei der Reklamation einer Entstörung.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="stoerungsNrLeistungserbringer">
+				<xsd:annotation>
+					<xsd:documentation>Störungsnummer bzw. Ticket-Id (des Leistungserbringers) der reklamierten
+						Entstörung.
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="30"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="reklamationsgrund">
+				<xsd:annotation>
+					<xsd:documentation>Grund der Reklamation.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="1024"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="EntstoerungProduktType" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>die abstrakte Basis für alle geschäftsfall-spezifischen Produkt-Daten
+				(Erweiterungspunkt)
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="complex:GeschaeftsfallProduktType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="EntstoerungTermineType">
+		<xsd:annotation>
+			<xsd:documentation>Der mögliche Wunschtermin des Auftraggebers für die Entstörung.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="auftraggeberWunschtermin" type="complex:WunschterminType">
+				<xsd:annotation>
+					<xsd:documentation>Der mögliche Wunschtermin des Auftraggebers für die Entstörung.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		! Providerwechsel
+		!
+	-->
+	<xsd:element name="PV" type="order:ProviderwechselType"/>
+	<xsd:complexType name="ProviderwechselType">
+		<xsd:complexContent>
+			<xsd:extension base="complex:GeschaeftsfallType">
+				<xsd:sequence>
+					<xsd:element name="lineId" type="simple:LineIdType">
+						<xsd:annotation>
+							<xsd:documentation>Die eindeutige Line-Id, die den Kundenanschluss kennzeichnet (bestehend
+								aus Country-, Carrier- und Line-Code).
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="vorabstimmungId" type="simple:VorabstimmungIdType">
+						<xsd:annotation>
+							<xsd:documentation>ID welche auf den erfolgten Vorabstimmungsprozess zwischen aufnehmenden
+								und abgebenden Endkundenprovider referenziert.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="anlage" type="complex:AnlageMitTypType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Anlage mit Klassifizierung (Anlagentyp)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ansprechpartner" type="order:AnsprechpartnerType">
+						<xsd:annotation>
+							<xsd:documentation>Angaben zu Ansprechpartnern beim Auftraggeber.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="termine" type="order:ProviderwechselTermineType">
+						<xsd:annotation>
+							<xsd:documentation>Angaben zu Terminen</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="auftragsposition" type="order:AuftragspositionProviderwechselType">
+						<xsd:annotation>
+							<xsd:documentation>Liste der Auftragspositionen, in der die Produkte / Leistungsmerkmale
+								aufgeführt sind, die im Auftrag bearbeitet werden sollen
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="AuftragspositionProviderwechselType">
+		<xsd:sequence>
+			<xsd:element name="produkt" type="complex:ProduktType">
+				<xsd:annotation>
+					<xsd:documentation>die Beschreibung des Produktes der Auftragsposition (Erweiterungspunkt)
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="geschaeftsfallProdukt" type="order:ProviderwechselProduktType">
+				<xsd:annotation>
+					<xsd:documentation>Die geschäftsfallspezifischen Angaben zum Produkt (Erweiterungspunkt)
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="position" type="order:AuftragspositionType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Die Unterspositionen zur Auftragsposition.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ProviderwechselProduktType" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>die abstrakte Basis für alle geschäftsfall-spezifischen Produkt-Daten
+				(Erweiterungspunkt)
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="complex:GeschaeftsfallProduktType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="ProviderwechselTermineType">
+		<xsd:annotation>
+			<xsd:documentation>die möglichen Termine für eine Providerwechsel</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="auftraggeberWunschtermin" type="complex:WunschterminType">
+				<xsd:annotation>
+					<xsd:documentation>Terminwunsch des Auftraggebers zu dem der Providerwechsel erfolgen soll.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		! DIAG-GET (Diagnose)
+		!
+	-->
+	<xsd:element name="GET" type="order:DiagnoseGetType"/>
+	<xsd:complexType name="DiagnoseGetType">
+		<xsd:complexContent>
+			<xsd:extension base="complex:GeschaeftsfallType">
+				<xsd:sequence>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType">
+						<xsd:annotation>
+							<xsd:documentation>bezeichnet den Einzelvertrag, auf den sich der Auftrag bezeieht
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="lineId" type="simple:LineIdType">
+						<xsd:annotation>
+							<xsd:documentation>Die eindeutige Line-Id, die den Kundenanschluss kennzeichnet (bestehend
+								aus Country-, Carrier- und Line-Code).
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="auftragsposition" type="order:AuftragspositionDiagnoseType">
+						<xsd:annotation>
+							<xsd:documentation>Auftragsposition mit den für die Durchführung der Diagnose benötigten
+								Informationen.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="AuftragspositionDiagnoseType">
+		<xsd:sequence>
+			<xsd:element name="parameter">
+				<xsd:annotation>
+					<xsd:documentation>Parameter für die durchzuführende(n) Diagnose(n).</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="operation" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>Name der Diagnoseoperation bzw. der Entstöroperation, die
+									durchgeführt werden soll.
+								</xsd:documentation>
+							</xsd:annotation>
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="20"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- 
+		!
+		! DIAG-SET (Diagnose)
+		!
+	-->
+	<xsd:element name="SET" type="order:DiagnoseSetType"/>
+	<xsd:complexType name="DiagnoseSetType">
+		<xsd:complexContent>
+			<xsd:extension base="complex:GeschaeftsfallType">
+				<xsd:sequence>
+					<xsd:element name="vertragsnummer" type="simple:VertragsnummerType">
+						<xsd:annotation>
+							<xsd:documentation>bezeichnet den Einzelvertrag, auf den sich der Auftrag bezeieht
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="lineId" type="simple:LineIdType">
+						<xsd:annotation>
+							<xsd:documentation>Die eindeutige Line-Id, die den Kundenanschluss kennzeichnet (bestehend
+								aus Country-, Carrier- und Line-Code).
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="auftragsposition" type="order:AuftragspositionDiagnoseType">
+						<xsd:annotation>
+							<xsd:documentation>Auftragsposition mit den für die Durchführung der Diagnose benötigten
+								Informationen.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+</xsd:schema>
